@@ -17,8 +17,9 @@ public class WebClient {
 	 * The request will be of the form http://[host]:[port]/[resource]?
 	 * followed by key=value& for each of the entries in the queryParams map.
 	 * @return the JSON object returned by the API if successful, null if unsuccessful
+	 * @throws Exception 
 	 */
-	public String makeRequest(String resource, Map<String, Object> queryParams) {
+	public String makeRequest(String resource, Map<String, Object> queryParams) throws Exception {
 		
 		try {
 		
