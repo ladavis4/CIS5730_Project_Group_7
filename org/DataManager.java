@@ -29,17 +29,18 @@ public class DataManager {
 			map.put("login", login);
 			map.put("password", password);
 			String response = client.makeRequest("/findOrgByLoginAndPassword", map);
+			System.out.println("Web Client response: " + response);
+
 
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
 			String status = (String)json.get("status");
 
-
 			if (status.equals("success")) {
 				JSONObject data = (JSONObject)json.get("data");
 				String fundId = (String)data.get("_id");
 				String name = (String)data.get("name");
-				String description = (String)data.get("descrption");
+				String description = (String)data.get("description"); //Found a typo here -Lenny "descrption -> "description"
 				Organization org = new Organization(fundId, name, description);
 
 				JSONArray funds = (JSONArray)data.get("funds");
@@ -58,8 +59,9 @@ public class DataManager {
 					Iterator it2 = donations.iterator();
 					while(it2.hasNext()){
 						JSONObject donation = (JSONObject) it2.next();
-						String contributorId = (String)donation.get("contributor");
-						String contributorName = this.getContributorName(contributorId);
+						String contributorId = (String)donation.get("_id");
+						String contributorName = (String)donation.get("contributor"); //Fixed another bug, changed how we get the contributor name
+
 						long amount = (Long)donation.get("amount");
 						String date = (String)donation.get("date");
 						donationList.add(new Donation(fundId, contributorName, amount, date));
