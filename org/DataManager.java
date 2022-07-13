@@ -29,7 +29,6 @@ public class DataManager {
 			map.put("login", login);
 			map.put("password", password);
 			String response = client.makeRequest("/findOrgByLoginAndPassword", map);
-			System.out.println("Web Client response: " + response);
 
 
 			JSONParser parser = new JSONParser();
@@ -59,8 +58,11 @@ public class DataManager {
 					Iterator it2 = donations.iterator();
 					while(it2.hasNext()){
 						JSONObject donation = (JSONObject) it2.next();
-						String contributorId = (String)donation.get("_id");
+						String contributorId = (String)donation.get("contributor");
+
 						String contributorName = this.getContributorName(contributorId);
+						System.out.println("Contriubtor Name: " + contributorName);
+
 
 						long amount = (Long)donation.get("amount");
 						String date = (String)donation.get("date");
