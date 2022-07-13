@@ -60,7 +60,7 @@ public class DataManager {
 					while(it2.hasNext()){
 						JSONObject donation = (JSONObject) it2.next();
 						String contributorId = (String)donation.get("_id");
-						String contributorName = (String)donation.get("contributor"); //Fixed another bug, changed how we get the contributor name
+						String contributorName = this.getContributorName(contributorId);
 
 						long amount = (Long)donation.get("amount");
 						String date = (String)donation.get("date");

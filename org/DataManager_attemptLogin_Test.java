@@ -21,6 +21,8 @@ public class DataManager_attemptLogin_Test {
 			
 			@Override
 			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				if (resource.equals("/findContributorNameById"))
+					return "{\"status\":\"success\",\"data\":\"contrib1\"}";
 				return "{" +
 						"\"status\":\"success\"," +
 						"\"data\":{" +
