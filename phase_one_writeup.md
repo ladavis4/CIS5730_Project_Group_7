@@ -34,7 +34,8 @@
 * None  
 
 ### Instructions if changed
-* We have provided a “/data” folder in the repository. When starting MongoDB, run the command ./bin/mongod –dbpath [path_to_repo_location/data]. 
+* We have provided a “/data” folder in the repository. When starting MongoDB, run the command ./bin/mongod –dbpath [path_to_repo_location/data].
+* When running the Organization app from a Java IDE, pass in the arguments "prkapoor W@terfall" to run the UserInterface.java to ensure the organization app can access the data on the data folder.
 
 ### Team member contributions
 * Pranay - Completed Tasks 1.3 and Optional Tasks 1.7 and 1.8
