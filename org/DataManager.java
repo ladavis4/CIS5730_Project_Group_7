@@ -186,5 +186,33 @@ public class DataManager {
         }
     }
 
+    public String deleteFund(String fundID) {
+        try {
+            if (fundID == null) {
+                throw new IllegalArgumentException("fundId is null");
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", fundID);
+            if (client == null) {
+                throw new IllegalStateException("WebClient is null");
+            }
+            String response = client.makeRequest("/deleteFund", map);
+            if (response == null) {
+                throw new IllegalStateException("response was null");
+            }
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(response);
+            String status = (String) json.get("status");
+
+            if (status.equals("success")) {
+                return "success";
+            } else
+                return "error";
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return "error";
+        }
+    }
+
 
 }

@@ -155,9 +155,24 @@ public class UserInterface {
         double percent = (double) total / fund.getTarget() * 100;
 
         System.out.println("Total donation amount : $" + total + " (" + percent + "% of target)");
-
+        System.out.println("Enter D or d to delete this fund");
         System.out.println("Press the Enter key to go back to the listing of funds");
-        in.nextLine();
+        String d = in.nextLine();
+        if (d.length() != 0 && (d.equals("D") || d.equals("d"))) {
+            System.out.println("Enter Y/y for confirmation to delete this fund");
+            d = in.nextLine();
+            if (d.toUpperCase().equals("Y")) {
+                String res = dataManager.deleteFund(fund.getId());
+                if (res.equals("success")) {
+                    List<Fund> funds = org.getFunds();
+                    funds.removeIf(fund1 -> fund1.getId().equals(fund.getId()));
+                } else {
+                    System.out.println("Could not delete the fund. Please try again");
+                }
+            } else
+                System.out.println("Fund was not deleted");
+        }
+//            in.nextLine();
 
 
     }
