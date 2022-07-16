@@ -1,6 +1,7 @@
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.util.*;
 
@@ -23,15 +24,19 @@ public class DataManager {
 
         try {
             Map<String, Object> map = new HashMap<>();
+            if (login == null || password == null)
+                throw new IllegalArgumentException("Check login and password");
             map.put("login", login);
             map.put("password", password);
+            if (client == null) {
+                throw new IllegalStateException("WebClient is null");
+            }
             String response = client.makeRequest("/findOrgByLoginAndPassword", map);
-
+            if (response == null || response.length() == 0)
+                throw new IllegalStateException("WebClient response is null or empty.");
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(response);
             String status = (String) json.get("status");
-
-
             if (status.equals("success")) {
                 JSONObject data = (JSONObject) json.get("data");
                 String fundId = (String) data.get("_id");
@@ -69,7 +74,15 @@ public class DataManager {
                 }
 
                 return org;
-            } else return null;
+            } else throw new IllegalStateException("response status : error");
+        } catch (IllegalStateException e) {
+            System.out.println(e.toString());
+            throw new IllegalStateException();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.toString());
+            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            throw new IllegalStateException();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -85,13 +98,21 @@ public class DataManager {
     public String getContributorName(String id) {
 
         try {
+            if (id == null) {
+                throw new IllegalArgumentException("Id is null");
+            }
             if (idToName.containsKey(id)) {
                 return idToName.get(id);
             }
             Map<String, Object> map = new HashMap<>();
             map.put("id", id);
+            if (client == null) {
+                throw new IllegalStateException("WebClient is null");
+            }
             String response = client.makeRequest("/findContributorNameById", map);
-
+            if (response == null) {
+                throw new IllegalStateException("response was null");
+            }
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(response);
             String status = (String) json.get("status");
@@ -102,9 +123,17 @@ public class DataManager {
                     idToName.put(id, name);
                 }
                 return name;
-            } else return null;
+            } else throw new IllegalStateException("response status was error");
 
 
+        } catch (IllegalStateException e) {
+            System.out.println(e.toString());
+            throw new IllegalStateException();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.toString());
+            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            throw new IllegalStateException();
         } catch (Exception e) {
             return null;
         }
@@ -118,14 +147,21 @@ public class DataManager {
     public Fund createFund(String orgId, String name, String description, long target) {
 
         try {
-
+            if (orgId == null || name == null || description == null) {
+                throw new IllegalArgumentException("Check function arguments. One or more arguments are null.");
+            }
             Map<String, Object> map = new HashMap<>();
             map.put("orgId", orgId);
             map.put("name", name);
             map.put("description", description);
             map.put("target", target);
+            if (client == null) {
+                throw new IllegalStateException("WebClient is null");
+            }
             String response = client.makeRequest("/createFund", map);
-
+            if (response == null) {
+                throw new IllegalStateException("response was null");
+            }
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(response);
             String status = (String) json.get("status");
@@ -134,8 +170,16 @@ public class DataManager {
                 JSONObject fund = (JSONObject) json.get("data");
                 String fundId = (String) fund.get("_id");
                 return new Fund(fundId, name, description, target);
-            } else return null;
+            } else throw new IllegalStateException("Status returned error");
 
+        } catch (IllegalStateException e) {
+            System.out.println(e.toString());
+            throw new IllegalStateException();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.toString());
+            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            throw new IllegalStateException();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
