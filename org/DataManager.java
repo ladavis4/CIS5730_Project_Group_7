@@ -7,6 +7,7 @@ import java.util.*;
 public class DataManager {
 
     private final WebClient client;
+    private Map<String, String> idToName = new HashMap<>();
 
     public DataManager(WebClient client) {
         this.client = client;
@@ -84,7 +85,9 @@ public class DataManager {
     public String getContributorName(String id) {
 
         try {
-
+            if (idToName.containsKey(id)) {
+                return idToName.get(id);
+            }
             Map<String, Object> map = new HashMap<>();
             map.put("id", id);
             String response = client.makeRequest("/findContributorNameById", map);
@@ -95,6 +98,9 @@ public class DataManager {
 
             if (status.equals("success")) {
                 String name = (String) json.get("data");
+                if (name.length() > 0) {
+                    idToName.put(id, name);
+                }
                 return name;
             } else return null;
 
