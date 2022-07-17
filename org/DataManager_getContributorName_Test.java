@@ -3,7 +3,6 @@ import org.junit.Test;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 //    This is a test class for the DataManager.getContributorName method.
 public class DataManager_getContributorName_Test {
@@ -19,7 +18,7 @@ public class DataManager_getContributorName_Test {
         assertEquals("Harsh", name);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testMalformedResponse() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
@@ -28,11 +27,12 @@ public class DataManager_getContributorName_Test {
 //                return "{\"stat\":\"success\",\"data\": \"Harsh\"}";
             }
         });
-        String name = dm.getContributorName("alex");
-        assertNull(name);
+//        String name =
+        dm.getContributorName("alex");
+//        assertNull(name);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testUnsuccessfulGetContributorName() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
@@ -40,7 +40,8 @@ public class DataManager_getContributorName_Test {
                 return "{\"status\":\"error5730\"}";
             }
         });
-        String name = dm.getContributorName("hasareen");
-        assertNull(name);
+//        String name =
+        dm.getContributorName("hasareen");
+//        assertNull(name);
     }
 }

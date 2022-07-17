@@ -2,7 +2,8 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class DataManager_createFund_Test {
 
@@ -41,7 +42,7 @@ public class DataManager_createFund_Test {
     /*
      * If status is not "success" then fund should be null
      */
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testUnSuccessfulCreation() {
 
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
@@ -55,16 +56,17 @@ public class DataManager_createFund_Test {
         });
 
 
-        Fund f = dm.createFund("12345", "new fund", "this is the new fund", 10000);
+//        Fund f =
+        dm.createFund("12345", "new fund", "this is the new fund", 10000);
 
-        assertNull(f); // Since the status response is error then this fund should be null
+//        assertNull(f); // Since the status response is error then this fund should be null
 
     }
 
     /*
      * Should cover the Exception thrown code
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testExceptionThrown() {
 
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
@@ -77,9 +79,10 @@ public class DataManager_createFund_Test {
         });
 
 
-        Fund f = dm.createFund("12345", "new fund", "this is the new fund", 10000);
+//        Fund f =
+        dm.createFund("12345", "new fund", "this is the new fund", 10000);
 
-        assertNull(f); // Since the status response is error then this fund should be null
+//        assertNull(f); // Since the status response is error then this fund should be null
 
     }
 

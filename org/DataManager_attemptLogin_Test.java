@@ -3,7 +3,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 //    This is a test class for the DataManager.attemptLogin method.
 public class DataManager_attemptLogin_Test {
@@ -39,7 +40,7 @@ public class DataManager_attemptLogin_Test {
         assertEquals("10 July, 2022", donation.getDate());
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testUnsuccessfulLogin() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
@@ -47,11 +48,12 @@ public class DataManager_attemptLogin_Test {
                 return "{\"status\":\"login failed\"}";
             }
         });
-        Organization org = dm.attemptLogin("Harsh", "pass");
-        assertNull(org);
+//        Organization org =
+        dm.attemptLogin("Harsh", "pass");
+//        assertNull(org);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testMalformedResponse() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
@@ -59,7 +61,8 @@ public class DataManager_attemptLogin_Test {
                 return "no_speak_json";
             }
         });
-        Organization org = dm.attemptLogin("Harsh", "pass");
-        assertNull(org);
+//        Organization org =
+        dm.attemptLogin("Harsh", "pass");
+//        assertNull(org);
     }
 }
