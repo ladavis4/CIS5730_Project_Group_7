@@ -202,6 +202,8 @@ public class UserInterface {
 			num = in.nextInt();
 		}while(!(num == 0 || num == 1 ));
 		
+		in.nextLine();
+		
 		if(num == 0) {
 			List<Donation> donations = fund.getDonations();
 			System.out.println("Number of donations: " + donations.size());
@@ -299,10 +301,10 @@ public class UserInterface {
 		//System.out.println("Press the Enter key to go back to the listing of funds");        
         System.out.println("Enter D or d to delete this fund");
         System.out.println("Press the Enter key to go back to the listing of funds");
-        String d = in.nextLine();
+        String d = in.nextLine().trim();
         if (d.length() != 0 && (d.equals("D") || d.equals("d"))) {
             System.out.println("Enter Y/y for confirmation to delete this fund");
-            d = in.nextLine();
+            d = in.nextLine().trim();
             if (d.toUpperCase().equals("Y")) {
                 String res = dataManager.deleteFund(fund.getId());
                 if (res.equals("success")) {
@@ -315,8 +317,6 @@ public class UserInterface {
                 System.out.println("Fund was not deleted");
         }
 //            in.nextLine();
-
-
     }
 
 
