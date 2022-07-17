@@ -3,8 +3,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 public class UserInterface {
 
@@ -12,6 +15,7 @@ public class UserInterface {
     private DataManager dataManager;
     private Organization org;
     private Scanner in = new Scanner(System.in);
+	private Map<Integer, String> results = new HashMap<>();
 
     public UserInterface(DataManager dataManager, Organization org) {
         this.dataManager = dataManager;
@@ -39,19 +43,22 @@ public class UserInterface {
                 System.out.println("Enter the fund number to see more information.");
             }
             System.out.println("Enter 0 to create a new fund");
-//            System.out.println("Enter L or l to logout");
+			System.out.println("Enter -1 to logout of this user");
+			
             String str = in.next();
 
             try {
-//                if (str.equals("L") || str.equals("l")) {
-//                    logout();
-//                }
+
                 if (Integer.parseInt(str) >= 0 && Integer.parseInt(str) <= org.getFunds().size()) {
                     int option = Integer.parseInt(str);
                     in.nextLine();
                     if (option == 0) {
                         createFund();
-                    } else {
+                    }				
+                    else if(option == -1) {
+						logout();
+					} 
+                    else {
                         displayFund(option);
                     }
                 } else {
@@ -64,14 +71,40 @@ public class UserInterface {
 
     }
 
-//    public void logout() {
-//        System.out.println("Enter login id");
-//        String loginId = in.next();
-//        System.out.println("Enter password");
-//        String password = in.next();
-//        String[] args = {loginId, password};
-//        main(args);
-//    }
+	public void logout() {
+		
+		while(true) {
+			System.out.print("Enter the login : ");
+			String login = in.nextLine().trim();
+			
+			while(login.length() == 0) {
+				System.out.println("Error: Blank login provided! Provide another login");
+				System.out.print("Enter the login: ");
+				login = in.nextLine().trim(); 
+			}
+			
+			System.out.print("Enter the password : ");
+			String password = in.nextLine().trim();
+			
+			while(password.length() == 0) {
+				System.out.println("Error: Blank password provided! Provide another password");
+				System.out.print("Enter the password: ");
+				password = in.nextLine().trim(); 
+			}
+			
+			Organization organization = this.dataManager.attemptLogin(login, password);
+			
+			if(organization == null) {
+				System.out.println("Login failed.");
+			}
+			else {
+				this.org = organization;
+				break;
+			}
+		}
+		
+	}
+	
 
     /*
      * Error Handling for creating funds (1.8)
@@ -125,14 +158,7 @@ public class UserInterface {
      */
     public void displayFund(int fundNumber) {
 
-        Fund fund = org.getFunds().get(fundNumber - 1);
-
-        System.out.println("\n\n");
-        System.out.println("Here is information about this fund:");
-        System.out.println("Name: " + fund.getName());
-        System.out.println("Description: " + fund.getDescription());
-        System.out.println("Target: $" + fund.getTarget());
-
+       /*
         List<Donation> donations = fund.getDonations();
         System.out.println("Number of donations: " + donations.size());
         long total = 0;
@@ -154,7 +180,123 @@ public class UserInterface {
 
         double percent = (double) total / fund.getTarget() * 100;
 
-        System.out.println("Total donation amount : $" + total + " (" + percent + "% of target)");
+        System.out.println("Total donation amount : $" + total + " (" + percent + "% of target)");*/
+        
+    	Fund fund = org.getFunds().get(fundNumber - 1);
+
+        System.out.println("\n\n");
+        System.out.println("Here is information about this fund:");
+        System.out.println("Name: " + fund.getName());
+        System.out.println("Description: " + fund.getDescription());
+        System.out.println("Target: $" + fund.getTarget());
+        
+    	int num = -1;
+		do {
+			System.out.println("Enter 0 to see donations at individual level and enter 1 to see donations at aggregate level");
+			System.out.print("Enter a number:" );
+			while(!in.hasNextInt()) {
+				System.out.println("Error: Incorrect value provided. Enter 0 to see donations at individual level, 1 at aggregate level");
+				System.out.print("Enter a number:");
+				in.next();
+			}
+			num = in.nextInt();
+		}while(!(num == 0 || num == 1 ));
+		
+		if(num == 0) {
+			List<Donation> donations = fund.getDonations();
+			System.out.println("Number of donations: " + donations.size());
+			
+			
+
+				long total = 0;
+
+				for (Donation donation : donations) {
+					
+					total += donation.getAmount();
+					
+					String str = donation.getDate().substring(0, 10);
+					
+					
+					try {
+						Date date = new SimpleDateFormat("yyyy-MM-dd").parse(str);
+						DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");  
+						String out = dateFormat.format(date);
+						System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + out);
+					} catch (ParseException e) {
+
+					}
+				}
+						
+				double percent = (double)  total/fund.getTarget() * 100;
+				
+				System.out.println("Total donation amount : $" + total + " (" + percent + "% of target)");
+			
+
+		}else {
+			List<Donation> donations = fund.getDonations();
+			System.out.println("Number of donations: " + donations.size());
+			
+			
+			if(results.containsKey(fundNumber)) {
+				String out = results.get(fundNumber);
+				System.out.print(out);
+			}else {
+				long total = 0;
+				HashMap<String, Long> aggregateAmount = new HashMap<>();
+				HashMap<String, Integer> aggregateCount = new HashMap<>();
+				for (Donation donation : donations) {
+					
+					total += donation.getAmount();
+					
+					String name = donation.getContributorName();
+					long amount = donation.getAmount();
+					
+					if(aggregateAmount.containsKey(name)) {
+						
+						long amt = aggregateAmount.get(name);
+						amt += amount;
+						
+						int count = aggregateCount.get(name);
+						count++;
+						
+						aggregateAmount.replace(name, amt);
+						aggregateCount.replace(name, count);
+					}
+					else {
+						aggregateAmount.put(name, amount);
+						aggregateCount.put(name, 1);
+					}
+
+				}
+			
+				// Create a sorted list of values in a TreeSet
+				TreeSet<Long> set = new TreeSet<>();
+				for(String key: aggregateAmount.keySet()) {
+					set.add(aggregateAmount.get(key));
+				}
+				
+				// Iterate over TreeSet and print out aggregate donations from highest to lowest
+				String memo = "";
+				while(!set.isEmpty()) {
+					long highest = set.pollLast();
+					for(String key: aggregateAmount.keySet()) {
+						if(aggregateAmount.get(key) == highest) {
+							memo += key + ", " + aggregateCount.get(key) + " donations, $" + highest + " total\n";
+						}
+					}
+				}
+				
+				double percent = (double)  total/fund.getTarget() * 100;
+				
+				memo += "Total donation amount : $" + total + " (" + percent + "% of target)\n";
+				results.put(fundNumber, memo);
+				System.out.print(memo);
+				
+			}
+
+		}
+		
+		//System.out.println("Press the Enter key to go back to the listing of funds");        
         System.out.println("Enter D or d to delete this fund");
         System.out.println("Press the Enter key to go back to the listing of funds");
         String d = in.nextLine();
