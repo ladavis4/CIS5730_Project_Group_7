@@ -39,17 +39,18 @@ public class UserInterface {
             System.out.println("Enter 0 to create a new fund");
             System.out.println("Enter -1 to logout of this user");
 
-            String str = in.next();
+            String str = in.nextLine();
 
             try {
-                int option = Integer.parseInt(str);
-                if (option == -1) {
-                    logout();
-                }
-                if (Integer.parseInt(str) >= 0 && Integer.parseInt(str) <= org.getFunds().size()) {
-                    in.nextLine();
+
+
+                if (Integer.parseInt(str) >= -1 && Integer.parseInt(str) <= org.getFunds().size()) {
+//                    in.nextLine();
+                    int option = Integer.parseInt(str);
                     if (option == 0) {
                         createFund();
+                    } else if (option == -1) {
+                        logout();
                     } else {
                         displayFund(option);
                     }
@@ -66,6 +67,7 @@ public class UserInterface {
     public void logout() {
 
         while (true) {
+//            in.nextLine();
             System.out.print("Enter the login : ");
             String login = in.nextLine().trim();
 
@@ -83,14 +85,12 @@ public class UserInterface {
                 System.out.print("Enter the password: ");
                 password = in.nextLine().trim();
             }
-
-            Organization organization = this.dataManager.attemptLogin(login, password);
-
-            if (organization == null) {
-                System.out.println("Login failed.");
-            } else {
+            try {
+                Organization organization = this.dataManager.attemptLogin(login, password);
                 this.org = organization;
                 break;
+            } catch (Exception e) {
+                System.out.println("Login failed");
             }
         }
 
@@ -137,10 +137,12 @@ public class UserInterface {
             }
             target = in.nextInt();
         } while (target <= 0);
-
-
-        Fund fund = dataManager.createFund(org.getId(), name, description, target);
-        org.getFunds().add(fund);
+        try {
+            Fund fund = dataManager.createFund(org.getId(), name, description, target);
+            org.getFunds().add(fund);
+        } catch (Exception e) {
+            System.out.println("Fund could not be created please try again.");
+        }
 
     }
 
