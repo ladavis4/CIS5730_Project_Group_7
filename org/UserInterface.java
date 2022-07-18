@@ -89,7 +89,7 @@ public class UserInterface {
                 this.org = organization;
                 break;
             } catch (Exception e) {
-                System.out.println("Login failed");
+                System.out.println("Login failed, please try again");
             }
         }
 
@@ -199,8 +199,6 @@ public class UserInterface {
         if (num == 0) {
             List<Donation> donations = fund.getDonations();
             System.out.println("Number of donations: " + donations.size());
-
-
             long total = 0;
 
             for (Donation donation : donations) {
@@ -208,8 +206,6 @@ public class UserInterface {
                 total += donation.getAmount();
 
                 String str = donation.getDate().substring(0, 10);
-
-
                 try {
                     Date date = new SimpleDateFormat("yyyy-MM-dd").parse(str);
                     DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
@@ -296,11 +292,16 @@ public class UserInterface {
             System.out.println("Enter Y/y for confirmation to delete this fund");
             d = in.nextLine().trim();
             if (d.toUpperCase().equals("Y")) {
-                String res = dataManager.deleteFund(fund.getId());
-                if (res.equals("success")) {
-                    List<Fund> funds = org.getFunds();
-                    funds.removeIf(fund1 -> fund1.getId().equals(fund.getId()));
-                } else {
+                try {
+                    String res = dataManager.deleteFund(fund.getId());
+                    if (res.equals("success")) {
+                        List<Fund> funds = org.getFunds();
+                        funds.removeIf(fund1 -> fund1.getId().equals(fund.getId()));
+                        System.out.println("Fund deleted successfully");
+                    } else {
+                        System.out.println("Could not delete the fund. Please try again");
+                    }
+                } catch (Exception e) {
                     System.out.println("Could not delete the fund. Please try again");
                 }
             } else
