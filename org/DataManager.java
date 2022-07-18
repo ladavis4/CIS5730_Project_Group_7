@@ -76,15 +76,15 @@ public class DataManager {
                 return org;
             } else throw new IllegalStateException("response status : error");
         } catch (IllegalStateException e) {
-            System.out.println(e.toString());
+//            System.out.println(e.toString());
             throw new IllegalStateException();
         } catch (IllegalArgumentException e) {
-            System.out.println(e.toString());
+//            System.out.println(e.toString());
             throw new IllegalArgumentException();
         } catch (ParseException e) {
             throw new IllegalStateException();
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return null;
         }
     }
@@ -127,10 +127,10 @@ public class DataManager {
 
 
         } catch (IllegalStateException e) {
-            System.out.println(e.toString());
+//            System.out.println(e.toString());
             throw new IllegalStateException();
         } catch (IllegalArgumentException e) {
-            System.out.println(e.toString());
+//            System.out.println(e.toString());
             throw new IllegalArgumentException();
         } catch (ParseException e) {
             throw new IllegalStateException();
@@ -145,7 +145,7 @@ public class DataManager {
      * @return a new Fund object if successful; null if unsuccessful
      */
     public Fund createFund(String orgId, String name, String description, long target) {
-
+        int stat = 1;
         try {
             if (orgId == null || name == null || description == null) {
                 throw new IllegalArgumentException("Check function arguments. One or more arguments are null.");
@@ -173,16 +173,24 @@ public class DataManager {
             } else throw new IllegalStateException("Status returned error");
 
         } catch (IllegalStateException e) {
-            System.out.println(e.toString());
+            stat = 0;
+//            System.out.println(e.toString());
             throw new IllegalStateException();
         } catch (IllegalArgumentException e) {
-            System.out.println(e.toString());
+            stat = 0;
+//            System.out.println(e.toString());
             throw new IllegalArgumentException();
         } catch (ParseException e) {
+            stat = 0;
             throw new IllegalStateException();
         } catch (Exception e) {
-            e.printStackTrace();
+            stat = 0;
+//            e.printStackTrace();
             return null;
+        } finally {
+            if (stat == 0) {
+                System.out.println("Error encountered in creating fund.");
+            }
         }
     }
 
@@ -209,7 +217,7 @@ public class DataManager {
             } else
                 return "error";
         } catch (Exception e) {
-            System.out.println(e.toString());
+//            System.out.println(e.toString());
             return "error";
         }
     }

@@ -39,14 +39,13 @@ public class UserInterface {
             System.out.println("Enter 0 to create a new fund");
             System.out.println("Enter -1 to logout of this user");
 
-            String str = in.nextLine();
-
+            String str = in.nextLine().trim();
+            int opt = -2;
             try {
-
-
                 if (Integer.parseInt(str) >= -1 && Integer.parseInt(str) <= org.getFunds().size()) {
 //                    in.nextLine();
                     int option = Integer.parseInt(str);
+                    opt = option;
                     if (option == 0) {
                         createFund();
                     } else if (option == -1) {
@@ -58,7 +57,8 @@ public class UserInterface {
                     System.out.println("Error: Incorrect fund number provided. Please enter a valid number");
                 }
             } catch (Exception e) {
-                System.out.println("Error: Incorrect fund number provided. Please enter a valid number");
+                if (opt == -2)
+                    System.out.println("HERE Error: Incorrect fund number provided. Please enter a valid number");
             }
         }
 
@@ -67,7 +67,6 @@ public class UserInterface {
     public void logout() {
 
         while (true) {
-//            in.nextLine();
             System.out.print("Enter the login : ");
             String login = in.nextLine().trim();
 
@@ -135,7 +134,7 @@ public class UserInterface {
                 System.out.print("Enter the fund target:");
                 in.next();
             }
-            target = in.nextInt();
+            target = Long.parseLong(in.nextLine().trim());//in.nextInt();
         } while (target <= 0);
         try {
             Fund fund = dataManager.createFund(org.getId(), name, description, target);
@@ -307,7 +306,6 @@ public class UserInterface {
             } else
                 System.out.println("Fund was not deleted");
         }
-//            in.nextLine();
     }
 
 
