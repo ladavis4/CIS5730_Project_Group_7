@@ -142,30 +142,49 @@ public class MakeDonationActivity extends AppCompatActivity {
 
         Log.v("makeDonation", orgId + " " + fundId + " " + amount + " " + contributorId);
 
-        boolean success = dataManager.makeDonation(contributorId, fundId, amount);
-
-        if (success) {
-            Toast.makeText(this, "Thank you for your donation!", Toast.LENGTH_LONG).show();
-            contributor.getDonations().add(new Donation(selectedFund.getName(), contributor.getName(), Long.parseLong(amount), new Date().toString()));
-
-            new AsyncTask<String, String, String>() {
-
-                protected String doInBackground(String... inputs) {
-                    try { Thread.sleep(3000); }
-                    catch (Exception e) { }
-                    return null;
-                }
-
-                protected void onPostExecute(String input) {
-                    finish();
-                }
-            }.execute();
-
-
+        int amountInt = 0;
+        boolean isNumeric = false;
+        try {
+            amountInt = Integer.parseInt(amount);
+            isNumeric = true;
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Donation field cannot be empty, try again!", Toast.LENGTH_LONG).show();
         }
-        else {
-            Toast.makeText(this, "Sorry, something went wrong!", Toast.LENGTH_LONG).show();
+
+        if (amountInt == 0 && isNumeric){
+            Toast.makeText(this, "Cannot donate zero dollars! Please try again!", Toast.LENGTH_LONG).show();
+        } else if (amountInt < 0 && isNumeric) {
+            Toast.makeText(this, "Cannot donate negative money! Please try again!", Toast.LENGTH_LONG).show();
+        } else if (amountInt > 0 && isNumeric) {
+
+            try {
+                boolean success = dataManager.makeDonation(contributorId, fundId, amount);
+
+                if (success) {
+                    Toast.makeText(this, "Thank you for your donation!", Toast.LENGTH_LONG).show();
+                    contributor.getDonations().add(new Donation(selectedFund.getName(), contributor.getName(), Long.parseLong(amount), new Date().toString()));
+
+                    new AsyncTask<String, String, String>() {
+
+                        protected String doInBackground(String... inputs) {
+                            try {
+                                Thread.sleep(3000);
+                            } catch (Exception e) {
+                            }
+                            return null;
+                        }
+
+                        protected void onPostExecute(String input) {
+                            finish();
+                        }
+                    }.execute();
+                } else {
+                    Toast.makeText(this, "Sorry, something went wrong!", Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(this, "Donation request failed, exception returned", Toast.LENGTH_LONG).show();
+            }
+
         }
     }
-
 }
