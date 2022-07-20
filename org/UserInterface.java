@@ -58,7 +58,7 @@ public class UserInterface {
                 }
             } catch (Exception e) {
                 if (opt == -2)
-                    System.out.println("HERE Error: Incorrect fund number provided. Please enter a valid number");
+                    System.out.println("Error: Incorrect fund number provided. Please enter a valid number");
             }
         }
 
@@ -311,23 +311,25 @@ public class UserInterface {
 
 
     public static void main(String[] args) {
+        try {
+            DataManager ds = new DataManager(new WebClient("localhost", 3001));
 
-        DataManager ds = new DataManager(new WebClient("localhost", 3001));
+            String login = args[0];
+            String password = args[1];
 
-        String login = args[0];
-        String password = args[1];
+            Organization org = ds.attemptLogin(login, password);
 
+            if (org == null) {
+                System.out.println("Login failed.");
+            } else {
 
-        Organization org = ds.attemptLogin(login, password);
+                UserInterface ui = new UserInterface(ds, org);
 
-        if (org == null) {
-            System.out.println("Login failed.");
-        } else {
+                ui.start();
 
-            UserInterface ui = new UserInterface(ds, org);
-
-            ui.start();
-
+            }
+        } catch (Exception e) {
+            System.out.println("There was a problem with login. Please try again.");
         }
     }
 

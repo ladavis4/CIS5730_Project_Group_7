@@ -216,8 +216,13 @@ public class DataManager {
                 return "success";
             } else
                 return "error";
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            throw new IllegalStateException();
         } catch (Exception e) {
-//            System.out.println(e.toString());
             return "error";
         }
     }

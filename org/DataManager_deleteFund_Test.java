@@ -10,10 +10,7 @@ public class DataManager_deleteFund_Test {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                if (resource.equals("/deleteFund") && queryParams.get("id").equals("62cd937gfyurgfo734")) {
-                    return "{\"status\":\"success\"}";
-                }
-                return "{\"status\":\"error\"}";
+                return "{\"status\":\"success\"}";
             }
         });
         String response = dm.deleteFund("62cd937gfyurgfo734");
@@ -32,14 +29,13 @@ public class DataManager_deleteFund_Test {
         assertEquals("error", response);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testWhenWebClientIsNotConnected() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001));
-        String response = dm.deleteFund("62cd937gfyurgfo734");
-        assertEquals("error", response);
+        dm.deleteFund("62cd937gfyurgfo734");
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testWhenWebClientReturnsNull() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
@@ -47,11 +43,10 @@ public class DataManager_deleteFund_Test {
                 return null;
             }
         });
-        String response = dm.deleteFund("62cd937gfyurgfo734");
-        assertEquals("error", response);
+        dm.deleteFund("62cd937gfyurgfo734");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testWhenFundIdIsNull() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
@@ -59,18 +54,16 @@ public class DataManager_deleteFund_Test {
                 return "Something";
             }
         });
-        String response = dm.deleteFund(null);
-        assertEquals("error", response);
+        dm.deleteFund(null);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testWhenWebClientIsNull() {
         DataManager dm = new DataManager(null);
-        String response = dm.deleteFund("83qwertyuiop987");
-        assertEquals("error", response);
+        dm.deleteFund("83qwertyuiop987");
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testWhenResponseIsMalformed() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
@@ -78,7 +71,18 @@ public class DataManager_deleteFund_Test {
                 return "Something";
             }
         });
-        String response = dm.deleteFund("82qwerty74r5u5vr");
+        dm.deleteFund("82qwerty74r5u5vr");
+    }
+
+    @Test
+    public void testWhenOtherExceptionIsThrown() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                throw new NullPointerException();
+            }
+        });
+        String response = dm.deleteFund("83qwertyuiop987");
         assertEquals("error", response);
     }
 }
