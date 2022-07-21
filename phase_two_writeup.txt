@@ -12,9 +12,9 @@ Changes Made For Tasks
 	1. Task 2.1:
 	For this task a Map named idToName was added as an instance variable of the class DataManager and is used to cache the results of getting contributors’ names from their id in the getContributorName method of DataManager class.
 	2. Task 2.2: 
-		1. For the defensive programming aspect of this task, a number of if statements were added to check for null values and to throw the appropriate exception in all methods of DataManager.java. Additional catch blocks were also used to catch exceptions of particular types so that specific exceptions can be thrown which allowed us to pass the tests in DataManagerRobustnessTest.java. 
-		2. For displaying appropriate messages to the user and allowing the user to continue using the organization app even in case an exception is thrown, we added try catch blocks in UserInterface.java wherever there is a reliance on DataManager and use the catch blocks to give the user feedback if there is an exception. The user can then retry the operation. We also added a try catch block in the main method in case the login fails initially when the login Id and password are given as command line arguments.
-		3. After the defensive programming for this task, most of our tests from phase 1 were failing since they were not expecting the exceptions as specified in DataManagerRobustnessTest.java. To make our tests compliant with the newer implementation, we changed all DataManager test files to expect the same Exceptions as DataManagerRobustnessTest.java.
+		a) For the defensive programming aspect of this task, a number of if statements were added to check for null values and to throw the appropriate exception in all methods of DataManager.java. Additional catch blocks were also used to catch exceptions of particular types so that specific exceptions can be thrown which allowed us to pass the tests in DataManagerRobustnessTest.java. 
+		b) For displaying appropriate messages to the user and allowing the user to continue using the organization app even in case an exception is thrown, we added try catch blocks in UserInterface.java wherever there is a reliance on DataManager and use the catch blocks to give the user feedback if there is an exception. The user can then retry the operation. We also added a try catch block in the main method in case the login fails initially when the login Id and password are given as command line arguments.
+		c) After the defensive programming for this task, most of our tests from phase 1 were failing since they were not expecting the exceptions as specified in DataManagerRobustnessTest.java. To make our tests compliant with the newer implementation, we changed all DataManager test files to expect the same Exceptions as DataManagerRobustnessTest.java.
 	3. Task 2.3: 
 		The changes were made to the display fund method where after the basic information such as the fund name, target and description were displayed the user is prompted to provide an input of 0 to see donations at the individual level and an input of 1 to see donations at an aggregate level. The user is prompted again and again to provide an input till he/she provides an input of 0 or 1. If the user selects 0 then the donations are displayed in the old format as done in Phase 1, else, if the user provides an input of 1, the donations are shown at an aggregated level in descending order as mentioned in the specifications for input of 2. The results for the specification of phase 2 are cached as recommended in the specifications. 
 	4. Task 2.7: 
@@ -28,7 +28,7 @@ Known Bugs or Issues
 New Start-up Instructions: 
 	Same as phase 1
 	
-5. Team Member Contributions
+Team Member Contributions
    1. Pranay - Worked on tasks 2.3, 2.8
    2. Harsh - Worked on tasks 2.1, 2.2, 2.7
    3. Lenny - Worked on task 2.2
