@@ -6,7 +6,7 @@ Project Phase 2 Group 7 Write Up
 
 Optional Tasks Attempted: 
    1. Task 2.7 Organization App delete Fund
-   2. Task 2.8[a][b][c] Organization App logout/login
+   2. Task 2.8 Organization App logout/login
    
 Changes Made For Tasks 
 	1. Task 2.1:
