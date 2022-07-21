@@ -76,10 +76,8 @@ public class DataManager {
                 return org;
             } else throw new IllegalStateException("response status : error");
         } catch (IllegalStateException e) {
-//            System.out.println(e.toString());
             throw new IllegalStateException();
         } catch (IllegalArgumentException e) {
-//            System.out.println(e.toString());
             throw new IllegalArgumentException();
         } catch (ParseException e) {
             throw new IllegalStateException();
@@ -127,10 +125,8 @@ public class DataManager {
 
 
         } catch (IllegalStateException e) {
-//            System.out.println(e.toString());
             throw new IllegalStateException();
         } catch (IllegalArgumentException e) {
-//            System.out.println(e.toString());
             throw new IllegalArgumentException();
         } catch (ParseException e) {
             throw new IllegalStateException();
@@ -174,11 +170,9 @@ public class DataManager {
 
         } catch (IllegalStateException e) {
             stat = 0;
-//            System.out.println(e.toString());
             throw new IllegalStateException();
         } catch (IllegalArgumentException e) {
             stat = 0;
-//            System.out.println(e.toString());
             throw new IllegalArgumentException();
         } catch (ParseException e) {
             stat = 0;

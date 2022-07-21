@@ -43,7 +43,6 @@ public class UserInterface {
             int opt = -2;
             try {
                 if (Integer.parseInt(str) >= -1 && Integer.parseInt(str) <= org.getFunds().size()) {
-//                    in.nextLine();
                     int option = Integer.parseInt(str);
                     opt = option;
                     if (option == 0) {
@@ -134,7 +133,7 @@ public class UserInterface {
                 System.out.print("Enter the fund target:");
                 in.next();
             }
-            target = Long.parseLong(in.nextLine().trim());//in.nextInt();
+            target = Long.parseLong(in.nextLine().trim());
         } while (target <= 0);
         try {
             Fund fund = dataManager.createFund(org.getId(), name, description, target);
@@ -149,31 +148,6 @@ public class UserInterface {
      * Changed the date formatting here (1.7)
      */
     public void displayFund(int fundNumber) {
-
-       /*
-        List<Donation> donations = fund.getDonations();
-        System.out.println("Number of donations: " + donations.size());
-        long total = 0;
-        for (Donation donation : donations) {
-            total += donation.getAmount();
-
-            String str = donation.getDate().substring(0, 10);
-
-            try {
-                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(str);
-                DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
-                String out = dateFormat.format(date);
-                System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + out);
-            } catch (ParseException e) {
-
-            }
-            //System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
-        }
-
-        double percent = (double) total / fund.getTarget() * 100;
-
-        System.out.println("Total donation amount : $" + total + " (" + percent + "% of target)");*/
-
         Fund fund = org.getFunds().get(fundNumber - 1);
 
         System.out.println("\n\n");
@@ -284,7 +258,6 @@ public class UserInterface {
 
         }
 
-        //System.out.println("Press the Enter key to go back to the listing of funds");
         System.out.println("Enter D or d to delete this fund");
         System.out.println("Press the Enter key to go back to the listing of funds");
         String d = in.nextLine().trim();
