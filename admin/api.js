@@ -48,6 +48,25 @@ app.use('/checkOrgByLogin', (req, res) => {
 	    });
     });
 
+// Checks if an organization with this login id has the given password in the database.(H)
+app.use('/checkIfPasswordCorrect', (req, res) => {
+
+	var query = {"login" : req.query.login, "password" : req.query.password};
+
+	Organization.findOne( query, (err, result) => {
+		if (err) {
+		    res.json({ "status": "error", "data" : err});
+		}
+		else if (!result){
+		    res.json({ "status" : "false"});
+		}
+		else {
+		    //console.log(result);
+		    res.json({ "status" : "true"});
+		}
+	    });
+    });
+
 /*
 Handle the form submission to create a new organization
 */
@@ -89,6 +108,28 @@ app.use('/allLogins', (req, res) => {
 		}
 	    }).sort({ 'name': 'asc' });
     });
+
+
+ // For updating password(H)
+ app.use('/updatePassword', (req, res) => {
+
+ 	var filter = {"login" : req.query.login, "password" : req.query.password};
+
+ 	var update = {"password" : req.query.passwordNew };
+
+ 	var action = { "$set" : update };
+
+ 	Organization.findOneAndUpdate( filter, action, { new : false }, (err, result) => {
+ 		if (err) {
+ 		    res.json({ "status": "error", "data" : err});
+ 		}
+ 		else {
+ 		    //console.log(result);
+ 		    res.json({ "status": "success"});
+ 		}
+ 	    });
+
+     });
 
 /*
 Create a new fund

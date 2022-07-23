@@ -10,10 +10,17 @@ public class UserInterface {
     private Organization org;
     private Scanner in = new Scanner(System.in);
     private Map<Integer, String> results = new HashMap<>();
+    private String currentLogin;
 
     public UserInterface(DataManager dataManager, Organization org) {
         this.dataManager = dataManager;
         this.org = org;
+    }
+
+    public UserInterface(DataManager dataManager, Organization org, String currentLogin) {
+        this.dataManager = dataManager;
+        this.org = org;
+        this.currentLogin = currentLogin;
     }
 
     /*
@@ -38,26 +45,31 @@ public class UserInterface {
             }
             System.out.println("Enter 0 to create a new fund");
             System.out.println("Enter -1 to logout of this user");
+            System.out.println("Enter C/c to change password");
 
             String str = in.nextLine().trim();
-            int opt = -2;
-            try {
-                if (Integer.parseInt(str) >= -1 && Integer.parseInt(str) <= org.getFunds().size()) {
-                    int option = Integer.parseInt(str);
-                    opt = option;
-                    if (option == 0) {
-                        createFund();
-                    } else if (option == -1) {
-                        logout();
+            if (str.equalsIgnoreCase("c")) {
+                changePassword();
+            } else {
+                int opt = -2;
+                try {
+                    if (Integer.parseInt(str) >= -1 && Integer.parseInt(str) <= org.getFunds().size()) {
+                        int option = Integer.parseInt(str);
+                        opt = option;
+                        if (option == 0) {
+                            createFund();
+                        } else if (option == -1) {
+                            logout();
+                        } else {
+                            displayFund(option);
+                        }
                     } else {
-                        displayFund(option);
+                        System.out.println("Error: Incorrect fund number provided. Please enter a valid number");
                     }
-                } else {
-                    System.out.println("Error: Incorrect fund number provided. Please enter a valid number");
+                } catch (Exception e) {
+                    if (opt == -2)
+                        System.out.println("Error: Incorrect fund number provided. Please enter a valid number");
                 }
-            } catch (Exception e) {
-                if (opt == -2)
-                    System.out.println("Error: Incorrect fund number provided. Please enter a valid number");
             }
         }
 
@@ -94,6 +106,43 @@ public class UserInterface {
 
     }
 
+    public void changePassword() {
+        try {
+//        System.out.println("Enter 1 to abort password change");
+            System.out.println("Enter your current password");
+            String currentPassword = in.nextLine().trim();
+//        if (currentPassword.equalsIgnoreCase("n")) {
+//
+//        }
+            if (currentPassword.length() == 0 || currentPassword == null) {
+                System.out.println("Wrong password. Please try changing password again.");
+            } else {
+                String checkPassword = this.dataManager.checkIfPasswordForLoginIsCorrect(this.currentLogin, currentPassword);
+                if (checkPassword.equals("error")) {
+                    System.out.println("There was an error in verifying password. Please try again.");
+                } else if (checkPassword.equals("false")) {
+                    System.out.println("Input current password is incorrect. Please try again.");
+                } else {
+                    System.out.println("Press enter to abort");
+                    System.out.println("Enter new password");
+                    String new1 = in.nextLine().trim();
+                    if (new1.length() != 0) {
+                        System.out.println("Enter new password again");
+                        String new2 = in.nextLine().trim();
+                        if (new1.equals(new2)) {
+                            String done = this.dataManager.updatePassword(currentLogin, currentPassword, new2);
+                            if (done.equals("success")) {
+                                System.out.println("Password changed successfully");
+                            } else throw new Exception();
+                        } else
+                            System.out.println("New passwords don't match.\nPassword was not changed.\nPlease try again.");
+                    } else System.out.println("Password not changed.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("There was an unexpected error in changing password. Please try again.");
+        }
+    }
 
     /*
      * Error Handling for creating funds (1.8)
@@ -284,10 +333,10 @@ public class UserInterface {
 
 
     public static void main(String[] args) {
+        String login;
         try {
             DataManager ds = new DataManager(new WebClient("localhost", 3001));
-
-            String login = args[0];
+            login = args[0];
             String password = args[1];
 
             Organization org = ds.attemptLogin(login, password);
@@ -296,7 +345,7 @@ public class UserInterface {
                 System.out.println("Login failed.");
             } else {
 
-                UserInterface ui = new UserInterface(ds, org);
+                UserInterface ui = new UserInterface(ds, org, login);
 
                 ui.start();
 
@@ -321,7 +370,7 @@ public class UserInterface {
                         if (option == 1) {
                             while (true) {
                                 System.out.print("Enter the login : ");
-                                String login = scanner.nextLine().trim();
+                                login = scanner.nextLine().trim();
                                 while (login.length() == 0) {
                                     System.out.println("Error: Blank login provided! Provide another login");
                                     System.out.print("Enter the login: ");
@@ -353,7 +402,7 @@ public class UserInterface {
                                 System.out.print("Enter the description : ");
                                 String description = scanner.nextLine().trim();
 
-                                while (name.length() == 0) {
+                                while (description.length() == 0) {
                                     System.out.println("Error: Blank password provided! Provide another password");
                                     System.out.print("Enter the password: ");
                                     password = scanner.nextLine().trim();
@@ -371,7 +420,7 @@ public class UserInterface {
                         } else {
                             while (true) {
                                 System.out.print("Enter the login : ");
-                                String login = scanner.nextLine().trim();
+                                login = scanner.nextLine().trim();
 
                                 while (login.length() == 0) {
                                     System.out.println("Error: Blank login provided! Provide another login");
@@ -406,8 +455,7 @@ public class UserInterface {
 
 
             }
-
-            UserInterface ui = new UserInterface(ds, org);
+            UserInterface ui = new UserInterface(ds, org, login);
             ui.start();
 
             //System.out.println("There was a problem with login. Please try again.");
