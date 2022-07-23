@@ -86,9 +86,9 @@ public class DataManager {
             return null;
         }
     }
-    
+
     /*public List<String> getLogins(){
-    	
+
     	List<String> list = new LinkedList<>();
     	try {
             Map<String, Object> map = new HashMap<>();
@@ -117,7 +117,7 @@ public class DataManager {
         } catch (Exception e) {
             return null;
         }
-    	
+
     }*/
 
     /**
@@ -220,7 +220,7 @@ public class DataManager {
             }
         }
     }
-    
+
     /**
      * This method creates a new fund in the database using the /createFund endpoint in the API
      *
@@ -294,6 +294,38 @@ public class DataManager {
 
             if (status.equals("success")) {
                 return "success";
+            } else
+                return "error";
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            throw new IllegalStateException();
+        } catch (Exception e) {
+            return "error";
+        }
+    }
+
+    public String checkIfLoginExists(String login) {
+        try {
+            if (login == null) {
+                throw new IllegalArgumentException("login is null");
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("login", login);
+            if (client == null) {
+                throw new IllegalStateException("WebClient is null");
+            }
+            String response = client.makeRequest("/checkOrgByLogin", map);
+            if (response == null) {
+                throw new IllegalStateException("response was null");
+            }
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(response);
+            String status = (String) json.get("status");
+            if (!status.equals("error")) {
+                return status;
             } else
                 return "error";
         } catch (IllegalStateException e) {

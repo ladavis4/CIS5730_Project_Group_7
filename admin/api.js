@@ -29,6 +29,25 @@ app.use('/findOrgByLoginAndPassword', (req, res) => {
 	    });
     });
 
+// Checks if an organization with this login id already exists in the database.(H)
+app.use('/checkOrgByLogin', (req, res) => {
+
+	var query = {"login" : req.query.login};
+
+	Organization.findOne( query, (err, result) => {
+		if (err) {
+		    res.json({ "status": "error", "data" : err});
+		}
+		else if (!result){
+		    res.json({ "status" : "not found"});
+		}
+		else {
+		    //console.log(result);
+		    res.json({ "status" : "found"});
+		}
+	    });
+    });
+
 /*
 Handle the form submission to create a new organization
 */
