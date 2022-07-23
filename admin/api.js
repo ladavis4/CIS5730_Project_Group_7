@@ -8,13 +8,13 @@ const {Donation} = require('./DbConfig.js');
 
 
 /*
-Return an org with login specified as req.query.login and password specified as 
+Return an org with login specified as req.query.login and password specified as
 req.query.password; this essentially acts as login for organizations
 */
 app.use('/findOrgByLoginAndPassword', (req, res) => {
 
 	var query = {"login" : req.query.login, "password" : req.query.password };
-    
+
 	Organization.findOne( query, (err, result) => {
 		if (err) {
 		    res.json({ "status": "error", "data" : err});
@@ -27,6 +27,48 @@ app.use('/findOrgByLoginAndPassword', (req, res) => {
 		    res.json({ "status" : "success", "data" : result});
 		}
 	    });
+    });
+
+/*
+Handle the form submission to create a new organization
+*/
+app.use('/createOrg', (req, res) => {
+
+	var org = new Organization({
+		login: req.query.login,
+		password: req.query.password,
+		name: req.query.name,
+		description: req.query.description,
+		funds: []
+	    });
+
+	org.save( (err) => {
+		if (err) {
+		    res.json({ "status": "error", "data" : err});
+		}
+		else {
+		    //console.log(org);
+		    //res.render("viewOrg", { 'org': org , 'status': 'Successfully created new Organization'});
+				res.json({ "status": "success", "data" : org});
+		}
+	    });
+
+    });
+
+/*
+List all Logins
+*/
+app.use('/allLogins', (req, res) => {
+	Organization.find({}, {login:1}, (err, result) => {
+		if (err) {
+				res.json({ "status": "error", "data" : err});
+		    //res.render("error", { "error" : err });
+		}
+		else {
+		    //console.log(result);
+				res.json({ "status": "success", "data" : result});
+		}
+	    }).sort({ 'name': 'asc' });
     });
 
 /*
@@ -67,7 +109,7 @@ app.use('/createFund', (req, res) => {
 				res.json({ "status": "success", "data" : fund});
 			    }
 			});
-		
+
 		}
 	    });
 
@@ -79,7 +121,7 @@ Return the Fund with ID specified as req.query.id
 app.use('/findFundById', (req, res) => {
 
 	var query = {"_id" : req.query.id };
-    
+
 	Fund.findOne( query, (err, result) => {
 		if (err) {
 		    res.json({'status': 'error', 'data' : err});
@@ -89,7 +131,7 @@ app.use('/findFundById', (req, res) => {
 		    res.json({'status' : 'success', 'data' : result});
 		}
 	    });
-	
+
     });
 
 /*
@@ -98,7 +140,7 @@ Delete the fund with ID specified as req.query.id
 app.use('/deleteFund', (req, res) => {
 
 	var query = {"_id" : req.query.id };
-    
+
 	Fund.findOneAndDelete( query, (err, orig) => {
 		if (err) {
 		    res.json({'status': 'error', 'data' : err});
@@ -133,9 +175,9 @@ app.use('/deleteFund', (req, res) => {
 Return the name of the contributor with ID specified as req.query.id
 */
 app.use('/findContributorNameById', (req, res) => {
-    
+
 	var query = { "_id" : req.query.id };
-	
+
 	Contributor.findOne(query, (err, result) => {
 		if (err) {
 		    res.json({'status': 'error', 'data' : err});
@@ -146,7 +188,7 @@ app.use('/findContributorNameById', (req, res) => {
 		else {
 		    res.json({'status': 'success', 'data': result.name});
 		}
-		
+
 	    });
     });
 
@@ -186,7 +228,7 @@ app.use('/makeDonation', (req, res) => {
 				res.json({'status' : 'error', 'data' : err});
 			    }
 			    else {
-				
+
 				var filter = { "_id" : req.query.fund };
 				var action = { "$push" : { "donations" : donation } };
 
@@ -202,7 +244,7 @@ app.use('/makeDonation', (req, res) => {
 
 					    var query = { "_id" : fund.org };
 
-					    var whichFund = { "funds" : { "_id" : { "$in" : [fund._id] }  } }; 
+					    var whichFund = { "funds" : { "_id" : { "$in" : [fund._id] }  } };
 
 					    var action = { "$pull" : whichFund };
 
@@ -217,14 +259,14 @@ app.use('/makeDonation', (req, res) => {
 						    if (err) {
 							res.json({'status' : 'error', 'data' : err});
 						    }
-						    else {    
+						    else {
 
 							var query = { "_id" : fund.org };
-					    
+
 							var action = { "$push" : { "funds" : fund } };
-							
+
 							Organization.findOneAndUpdate(query, action, { "new" : true }, (err, org) => {
-								
+
 								if (err) {
 								    res.json({'status' : 'error', 'data' : err});
 								}
@@ -254,7 +296,7 @@ app.use('/makeDonation', (req, res) => {
     });
 
 
-    
+
 
 /*
 Return the contributor with login specified as req.query.login and password specified
@@ -263,7 +305,7 @@ as req.query.password; essentially acts as login for contributors.
 app.use('/findContributorByLoginAndPassword', (req, res) => {
 
 	var query = {"login" : req.query.login, "password" : req.query.password };
-    
+
 	Contributor.findOne( query, (err, result) => {
 		if (err) {
 		    res.json({ "status": "error", "data" : err});
@@ -276,7 +318,7 @@ app.use('/findContributorByLoginAndPassword', (req, res) => {
 		    res.json({ "status" : "success", "data" : result});
 		}
 	    });
-	
+
 
     });
 
@@ -285,9 +327,9 @@ app.use('/findContributorByLoginAndPassword', (req, res) => {
 Return the name of the fund with ID specified as req.query.id
 */
 app.use('/findFundNameById', (req, res) => {
-    
+
 	var query = { "_id" : req.query.id };
-	
+
 	Fund.findOne(query, (err, result) => {
 		if (err) {
 		    res.json({'status': 'error', 'data' : err});
@@ -298,7 +340,7 @@ app.use('/findFundNameById', (req, res) => {
 		else {
 		    res.json({'status': 'success', 'data': result.name});
 		}
-		
+
 	    });
     });
 
@@ -320,7 +362,7 @@ app.use('/allOrgs', (req, res) => {
 		    var organizations = [];
 
 		    result.forEach( (org) => {
-			    
+
 			    var funds = [];
 
 			    org.funds.forEach( (fund) => {

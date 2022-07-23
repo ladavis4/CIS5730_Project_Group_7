@@ -282,7 +282,6 @@ public class UserInterface {
         }
     }
 
-
     public static void main(String[] args) {
         try {
             DataManager ds = new DataManager(new WebClient("localhost", 3001));
@@ -302,7 +301,113 @@ public class UserInterface {
 
             }
         } catch (Exception e) {
-            System.out.println("There was a problem with login. Please try again.");
+        	
+        	DataManager ds = new DataManager(new WebClient("localhost", 3001));
+        	
+        	//ds.getLogins();
+        	
+        	Organization org = null;
+        	while(true) {
+        		System.out.println("Enter 0 to provide login and password to login.");
+        		System.out.println("Enter 1 to create a new organization");
+
+        		Scanner scanner = new Scanner(System.in);
+        		
+				 String str = scanner.nextLine().trim();
+				 try {
+				     if (Integer.parseInt(str) >= 0 && Integer.parseInt(str) <= 1) {
+				         int option = Integer.parseInt(str);
+				         if (option == 1) {
+				        	 while (true) {
+				                 System.out.print("Enter the login : ");
+				                 String login = scanner.nextLine().trim();
+
+				                 while (login.length() == 0) {
+				                     System.out.println("Error: Blank login provided! Provide another login");
+				                     System.out.print("Enter the login: ");
+				                     login = scanner.nextLine().trim();
+				                 }
+
+				                 System.out.print("Enter the password : ");
+				                 String password = scanner.nextLine().trim();
+
+				                 while (password.length() == 0) {
+				                     System.out.println("Error: Blank password provided! Provide another password");
+				                     System.out.print("Enter the password: ");
+				                     password = scanner.nextLine().trim();
+				                 }
+				                 
+				                 System.out.print("Enter the name : ");
+				                 String name = scanner.nextLine().trim();
+				                 
+				                 while (name.length() == 0) {
+				                     System.out.println("Error: Blank password provided! Provide another password");
+				                     System.out.print("Enter the password: ");
+				                     password = scanner.nextLine().trim();
+				                 }
+				                 
+				                 System.out.print("Enter the description : ");
+				                 String description = scanner.nextLine().trim();
+				                 
+				                 while (name.length() == 0) {
+				                     System.out.println("Error: Blank password provided! Provide another password");
+				                     System.out.print("Enter the password: ");
+				                     password = scanner.nextLine().trim();
+				                 }
+				                 
+				                 try {
+				                     org = ds.createOrg(login, password, name , description);
+				                     break;
+				                 } catch (Exception e2) {
+				                     System.out.println("Creating Organization failed, please try again");
+				                 }
+				             }
+				        	 
+				        	 break;
+				         } else {
+				             while (true) {
+				                 System.out.print("Enter the login : ");
+				                 String login = scanner.nextLine().trim();
+
+				                 while (login.length() == 0) {
+				                     System.out.println("Error: Blank login provided! Provide another login");
+				                     System.out.print("Enter the login: ");
+				                     login = scanner.nextLine().trim();
+				                 }
+
+				                 System.out.print("Enter the password : ");
+				                 String password = scanner.nextLine().trim();
+
+				                 while (password.length() == 0) {
+				                     System.out.println("Error: Blank password provided! Provide another password");
+				                     System.out.print("Enter the password: ");
+				                     password = scanner.nextLine().trim();
+				                 }
+				                 try {
+				                     org = ds.attemptLogin(login, password);
+				                     break;
+				                 } catch (Exception e2) {
+				                     System.out.println("Login failed, please try again");
+				                 }
+				             }
+				             
+				             break;
+				         }
+				     } else {
+				         System.out.println("Error: Incorrect number provided. Please enter 0 or 1 ");
+				     }
+				 } catch (Exception e1) {
+				         System.out.println("Error: Incorrect number provided. Please enter 0 or 1");
+				 }
+				 
+
+        		
+        	}
+        	
+            UserInterface ui = new UserInterface(ds, org);
+            ui.start();
+			 
+            //System.out.println("There was a problem with login. Please try again.");
         }
     }
 

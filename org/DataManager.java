@@ -86,6 +86,39 @@ public class DataManager {
             return null;
         }
     }
+    
+    /*public List<String> getLogins(){
+    	
+    	List<String> list = new LinkedList<>();
+    	try {
+            Map<String, Object> map = new HashMap<>();
+            if (client == null) {
+                throw new IllegalStateException("WebClient is null");
+            }
+            String response = client.makeRequest("/allLogins", map);
+            if (response == null) {
+                throw new IllegalStateException("response was null");
+            }
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(response);
+            String status = (String) json.get("status");
+
+            if (status.equals("success")) {
+            	JSONObject data = (JSONObject) json.get("data");
+                System.out.println(data);
+                return list;
+            } else throw new IllegalStateException("response status was error");
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            throw new IllegalStateException();
+        } catch (Exception e) {
+            return null;
+        }
+    	
+    }*/
 
     /**
      * Look up the name of the contributor with the specified ID.
@@ -135,6 +168,59 @@ public class DataManager {
         }
     }
 
+    /**
+     * This method creates a new fund in the database using the /createFund endpoint in the API
+     *
+     * @return a new Fund object if successful; null if unsuccessful
+     */
+    public Organization createOrg(String login, String password, String name, String description) {
+        int stat = 1;
+        try {
+            if (login == null || password == null || name == null || description == null) {
+                throw new IllegalArgumentException("Check function arguments. One or more arguments are null.");
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("login", login);
+            map.put("password", password);
+            map.put("name", name);
+            map.put("description", description);
+            if (client == null) {
+                throw new IllegalStateException("WebClient is null");
+            }
+            String response = client.makeRequest("/createOrg", map);
+            if (response == null) {
+                throw new IllegalStateException("response was null");
+            }
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(response);
+            String status = (String) json.get("status");
+
+            if (status.equals("success")) {
+                JSONObject org = (JSONObject) json.get("data");
+                String orgId = (String) org.get("_id");
+                return new Organization(orgId, name, description);
+            } else throw new IllegalStateException("Status returned error");
+
+        } catch (IllegalStateException e) {
+            stat = 0;
+            throw new IllegalStateException();
+        } catch (IllegalArgumentException e) {
+            stat = 0;
+            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            stat = 0;
+            throw new IllegalStateException();
+        } catch (Exception e) {
+            stat = 0;
+//            e.printStackTrace();
+            return null;
+        } finally {
+            if (stat == 0) {
+                System.out.println("Error encountered in creating organization.");
+            }
+        }
+    }
+    
     /**
      * This method creates a new fund in the database using the /createFund endpoint in the API
      *
