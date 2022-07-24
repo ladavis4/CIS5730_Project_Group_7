@@ -337,13 +337,22 @@ public class UserInterface {
     	while (true) {
 	         System.out.print("Enter the login : ");
 	         String login = scanner.nextLine().trim();
-	
-	         while (login.length() == 0) {
+	         
+	         while (login.length() == 0 ) {
 	             System.out.println("Error: Blank login provided! Provide another login");
 	             System.out.print("Enter the login: ");
 	             login = scanner.nextLine().trim();
 	         }
-	            
+	         
+	         String status = ds.checkIfLoginExists(login);
+	         
+	         while (status.equals("found")) {
+	             System.out.println("Error: Login provided already exists in database! Provide another login");
+	             System.out.print("Enter the login: ");
+	             login = scanner.nextLine().trim();
+	             status = ds.checkIfLoginExists(login);
+	         }
+	         
 	         System.out.print("Enter the password : ");
 	         String password = scanner.nextLine().trim();
 	
