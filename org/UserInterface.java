@@ -11,7 +11,8 @@ public class UserInterface {
     private Scanner in = new Scanner(System.in);
     private Map<Integer, String> results = new HashMap<>();
     private String currentLogin;
-
+    private static String log;
+    
     public UserInterface(DataManager dataManager, Organization org) {
         this.dataManager = dataManager;
         this.org = org;
@@ -332,26 +333,25 @@ public class UserInterface {
     }
 
 
-    public static HashMap<Organization, String> createOrganization(DataManager ds, Scanner scanner) {
+    public static Organization createOrganization(DataManager ds, Scanner scanner) {
 	   	 
     	while (true) {
 	         System.out.print("Enter the login : ");
 	         String login = scanner.nextLine().trim();
-	         
-	         while (login.length() == 0 ) {
-	             System.out.println("Error: Blank login provided! Provide another login");
-	             System.out.print("Enter the login: ");
-	             login = scanner.nextLine().trim();
-	         }
-	         
 	         String status = ds.checkIfLoginExists(login);
 	         
-	         while (status.equals("found")) {
-	             System.out.println("Error: Login provided already exists in database! Provide another login");
+	         while (login.length() == 0 || status.equals("found")) {
+	        	 if(login.length() == 0) {
+	        		 System.out.println("Error: Blank login provided! Provide another login");
+	        	 }
+	        	 else {
+	        		 System.out.println("Error: Login provided already exists in database! Provide another login");
+	        	 }
 	             System.out.print("Enter the login: ");
 	             login = scanner.nextLine().trim();
-	             status = ds.checkIfLoginExists(login);
 	         }
+	         
+	         log = login;
 	         
 	         System.out.print("Enter the password : ");
 	         String password = scanner.nextLine().trim();
@@ -382,9 +382,9 @@ public class UserInterface {
 	         
 	         try {
 	            Organization org = ds.createOrg(login, password, name , description);
-                HashMap<Organization, String> map = new HashMap<>();
-                map.put(org, login);
-	             return map;
+                //HashMap<Organization, String> map = new HashMap<>();
+                //map.put(org, login);
+	            return org;
 	         } catch (Exception e2) {
 	             System.out.println("Creating Organization failed, please try again");
 	         }
@@ -393,7 +393,7 @@ public class UserInterface {
     }
     
     
-    public static HashMap<Organization, String> login(DataManager ds, Scanner scanner) {
+    public static Organization login(DataManager ds, Scanner scanner) {
         while (true) {
             System.out.print("Enter the login : ");
             String login = scanner.nextLine().trim();
@@ -404,6 +404,8 @@ public class UserInterface {
                 login = scanner.nextLine().trim();
             }
 
+            log = login;
+            
             System.out.print("Enter the password : ");
             String password = scanner.nextLine().trim();
 
@@ -414,9 +416,9 @@ public class UserInterface {
             }
             try {
                 Organization org = ds.attemptLogin(login, password);
-                HashMap<Organization, String> map = new HashMap<>();
-                map.put(org, login);
-                return map;
+                //HashMap<Organization, String> map = new HashMap<>();
+                //map.put(org, login);
+                return org;
             } catch (Exception e2) {
                 System.out.println("Login failed, please try again");
             }
@@ -459,8 +461,7 @@ public class UserInterface {
                     if (Integer.parseInt(str) >= 0 && Integer.parseInt(str) <= 1) {
                         int option = Integer.parseInt(str);
                         if (option == 1) {
-                            HashMap<Organization, String> map = createOrganization(ds, scanner);
-                            
+                            /*HashMap<Organization, String> map = createOrganization(ds, scanner);
                         	int count = 0;
                         	for(Organization key: map.keySet()) {
                         		if(count == 0) {
@@ -469,12 +470,12 @@ public class UserInterface {
                         			count++;
                         			break;
                         		}
-                        	}
-                            
+                        	}*/
+                        	org = createOrganization(ds, scanner);
+                        	login = log;
                             break;
                         } else {
-                        	HashMap<Organization, String> map = login(ds, scanner);
-                        	
+                        	/*HashMap<Organization, String> map = login(ds, scanner);
                         	int count = 0;
                         	for(Organization key: map.keySet()) {
                         		if(count == 0) {
@@ -483,7 +484,9 @@ public class UserInterface {
                         			count++;
                         			break;
                         		}
-                        	}
+                        	}*/
+                        	org = login(ds, scanner);
+                        	login = log;
                             break;
                         }
                     } else {
