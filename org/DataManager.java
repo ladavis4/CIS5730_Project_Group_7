@@ -87,38 +87,6 @@ public class DataManager {
         }
     }
 
-    /*public List<String> getLogins(){
-
-    	List<String> list = new LinkedList<>();
-    	try {
-            Map<String, Object> map = new HashMap<>();
-            if (client == null) {
-                throw new IllegalStateException("WebClient is null");
-            }
-            String response = client.makeRequest("/allLogins", map);
-            if (response == null) {
-                throw new IllegalStateException("response was null");
-            }
-            JSONParser parser = new JSONParser();
-            JSONObject json = (JSONObject) parser.parse(response);
-            String status = (String) json.get("status");
-
-            if (status.equals("success")) {
-            	JSONObject data = (JSONObject) json.get("data");
-                System.out.println(data);
-                return list;
-            } else throw new IllegalStateException("response status was error");
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException();
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException();
-        } catch (ParseException e) {
-            throw new IllegalStateException();
-        } catch (Exception e) {
-            return null;
-        }
-
-    }*/
 
     /**
      * Look up the name of the contributor with the specified ID.
