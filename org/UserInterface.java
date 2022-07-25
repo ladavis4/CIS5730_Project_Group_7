@@ -166,7 +166,6 @@ public class UserInterface {
                     String name = in.nextLine().trim();
                     System.out.println("Enter new description");
                     String description = in.nextLine().trim();
-                    System.out.println("Updating. . . . . . ");
                     String done = this.dataManager.updateOrgInfo(this.org.getId(), name, description, 2);
                     if (done.equals("success")) {
                         System.out.println("Updated info successfully");

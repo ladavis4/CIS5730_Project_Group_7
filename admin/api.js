@@ -48,7 +48,7 @@ app.use('/checkOrgByLogin', (req, res) => {
 	    });
     });
 
-// Checks if an organization with this login id has the given password in the database.(H)
+// Checks if an organization with this id has the given password in the database.(H)
 app.use('/checkIfPasswordCorrect', (req, res) => {
 
 	var query = {"_id" : req.query.id, "password" : req.query.password};
@@ -132,8 +132,8 @@ app.use('/allLogins', (req, res) => {
 
      });
 
-
-    app.use('/editOrgInfo', (req, res) => {
+// For updating organization information (H)
+    app.use('/updateOrgInfo', (req, res) => {
 
      	var filter = {"_id" : req.query.id };
      	var update = {};

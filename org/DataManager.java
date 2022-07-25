@@ -428,7 +428,7 @@ public class DataManager {
             if (client == null) {
                 throw new IllegalStateException("WebClient is null");
             }
-            String response = client.makeRequest("/editOrgInfo", map);
+            String response = client.makeRequest("/updateOrgInfo", map);
 
             if (response == null) {
                 throw new IllegalStateException("response was null");
