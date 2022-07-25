@@ -51,7 +51,7 @@ app.use('/checkOrgByLogin', (req, res) => {
 // Checks if an organization with this login id has the given password in the database.(H)
 app.use('/checkIfPasswordCorrect', (req, res) => {
 
-	var query = {"login" : req.query.login, "password" : req.query.password};
+	var query = {"_id" : req.query.id, "password" : req.query.password};
 
 	Organization.findOne( query, (err, result) => {
 		if (err) {
@@ -113,7 +113,8 @@ app.use('/allLogins', (req, res) => {
  // For updating password(H)
  app.use('/updatePassword', (req, res) => {
 
- 	var filter = {"login" : req.query.login, "password" : req.query.password};
+// 	var filter = {"login" : req.query.login, "password" : req.query.password};
+    var filter = {"_id" : req.query.id}
 
  	var update = {"password" : req.query.passwordNew };
 

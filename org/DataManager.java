@@ -137,9 +137,9 @@ public class DataManager {
     }
 
     /**
-     * This method creates a new fund in the database using the /createFund endpoint in the API
+     * This method creates a new organization in the database using the /createOrg endpoint in the API
      *
-     * @return a new Fund object if successful; null if unsuccessful
+     * @return a new Organization object if successful; null if unsuccessful
      */
     public Organization createOrg(String login, String password, String name, String description) {
         int stat = 1;
@@ -307,13 +307,13 @@ public class DataManager {
         }
     }
 
-    public String checkIfPasswordForLoginIsCorrect(String login, String password) {
+    public String checkIfPasswordForLoginIsCorrect(String id, String password) {
         try {
-            if (login == null || password == null) {
+            if (id == null || password == null) {
                 throw new IllegalArgumentException("Null arguments");
             }
             Map<String, Object> map = new HashMap<>();
-            map.put("login", login);
+            map.put("id", id);
             map.put("password", password);
             if (client == null) {
                 throw new IllegalStateException("WebClient is null");
@@ -340,14 +340,47 @@ public class DataManager {
         }
     }
 
-    public String updatePassword(String login, String password, String newPassword) {
+//    public String updatePassword(String login, String password, String newPassword) {
+//        try {
+//            if (login == null || password == null || newPassword == null) {
+//                throw new IllegalArgumentException("Null arguments");
+//            }
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("login", login);
+//            map.put("password", password);
+//            map.put("passwordNew", newPassword);
+//            if (client == null) {
+//                throw new IllegalStateException("WebClient is null");
+//            }
+//            String response = client.makeRequest("/updatePassword", map);
+//            if (response == null) {
+//                throw new IllegalStateException("response was null");
+//            }
+//            JSONParser parser = new JSONParser();
+//            JSONObject json = (JSONObject) parser.parse(response);
+//            String status = (String) json.get("status");
+//            if (!status.equals("error")) {
+//                return status;
+//            } else
+//                return "error";
+//        } catch (IllegalStateException e) {
+//            throw new IllegalStateException();
+//        } catch (IllegalArgumentException e) {
+//            throw new IllegalArgumentException();
+//        } catch (ParseException e) {
+//            throw new IllegalStateException();
+//        } catch (Exception e) {
+//            return "error";
+//        }
+//    }
+
+    public String updatePassword(String id, String newPassword) {
         try {
-            if (login == null || password == null || newPassword == null) {
+            if (id == null || newPassword == null) {
                 throw new IllegalArgumentException("Null arguments");
             }
             Map<String, Object> map = new HashMap<>();
-            map.put("login", login);
-            map.put("password", password);
+            map.put("id", id);
             map.put("passwordNew", newPassword);
             if (client == null) {
                 throw new IllegalStateException("WebClient is null");
@@ -373,6 +406,5 @@ public class DataManager {
             return "error";
         }
     }
-
 
 }
