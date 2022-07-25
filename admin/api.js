@@ -132,6 +132,30 @@ app.use('/allLogins', (req, res) => {
 
      });
 
+
+    app.use('/editOrgInfo', (req, res) => {
+
+     	var filter = {"_id" : req.query.id };
+     	var update = {};
+     	if (req.query.hasOwnProperty("name")) {
+     	    update.name = req.query.name;
+     	}
+     	if (req.query.hasOwnProperty("description")) {
+     	    update.description = req.query.description;
+     	}
+     	var action = { "$set" : update };
+     	Organization.findOneAndUpdate( filter, action, { new : false }, (err, result) => {
+     		if (err) {
+     		    res.json({ "status": "error", "data" : err});
+     		}
+     		else {
+     		    //console.log(result);
+     		    res.json({ "status": "success"});
+     		}
+     	    });
+
+         });
+
 /*
 Create a new fund
 */

@@ -47,10 +47,12 @@ public class UserInterface {
             System.out.println("Enter 0 to create a new fund");
             System.out.println("Enter -1 to logout of this user");
             System.out.println("Enter C/c to change password");
-
+            System.out.println("Enter E/e to edit account information");
             String str = in.nextLine().trim();
             if (str.equalsIgnoreCase("c")) {
                 changePassword();
+            } else if (str.equalsIgnoreCase("e")) {
+                editAccountInfo();
             } else {
                 int opt = -2;
                 try {
@@ -118,7 +120,7 @@ public class UserInterface {
             if (currentPassword.length() == 0 || currentPassword == null) {
                 System.out.println("Wrong password. Please try changing password again.");
             } else {
-                String checkPassword = this.dataManager.checkIfPasswordForLoginIsCorrect(this.org.getId(), currentPassword);
+                String checkPassword = this.dataManager.checkIfPasswordForOrgIsCorrect(this.org.getId(), currentPassword);
                 if (checkPassword.equals("error")) {
                     System.out.println("There was an error in verifying password. Please try again.");
                 } else if (checkPassword.equals("false")) {
@@ -143,6 +145,36 @@ public class UserInterface {
             }
         } catch (Exception e) {
             System.out.println("There was an unexpected error in changing password. Please try again.");
+        }
+    }
+
+    public void editAccountInfo() {
+        try {
+            System.out.println("Enter your current password");
+            String currentPassword = in.nextLine().trim();
+            if (currentPassword.length() == 0) {
+                System.out.println("Wrong password. Please try again.");
+            } else {
+                String checkPassword = this.dataManager.checkIfPasswordForOrgIsCorrect(this.org.getId(), currentPassword);
+                if (checkPassword.equals("error")) {
+                    System.out.println("There was an error in verifying password. Please try again.");
+                } else if (checkPassword.equals("false")) {
+                    System.out.println("Input current password is incorrect. Please try again.");
+                } else {
+                    System.out.println("Press enter to abort");
+                    System.out.println("Enter name");
+                    String name = in.nextLine().trim();
+                    System.out.println("Enter new description");
+                    String description = in.nextLine().trim();
+                    System.out.println("Updating. . . . . . ");
+                    String done = this.dataManager.updateOrgInfo(this.org.getId(), name, description, 2);
+                    if (done.equals("success")) {
+                        System.out.println("Updated info successfully");
+                    } else throw new Exception();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("There was an unexpected error in updating information. Please try again.");
         }
     }
 

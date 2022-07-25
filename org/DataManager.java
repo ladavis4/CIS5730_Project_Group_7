@@ -307,7 +307,7 @@ public class DataManager {
         }
     }
 
-    public String checkIfPasswordForLoginIsCorrect(String id, String password) {
+    public String checkIfPasswordForOrgIsCorrect(String id, String password) {
         try {
             if (id == null || password == null) {
                 throw new IllegalArgumentException("Null arguments");
@@ -396,6 +396,50 @@ public class DataManager {
                 return status;
             } else
                 return "error";
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            throw new IllegalStateException();
+        } catch (Exception e) {
+            return "error";
+        }
+    }
+
+    public String updateOrgInfo(String id, String name, String description, int which) {
+        try {
+            if (id == null || name == null || description == null) {
+                throw new IllegalArgumentException("Null arguments");
+            }
+            if (which < 0 || which > 2) {
+                throw new IllegalArgumentException("Problem with which argument");
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", id);
+            if (which == 0) {
+                map.put("name", name);
+            } else if (which == 1) {
+                map.put("description", description);
+            } else {
+                map.put("name", name);
+                map.put("description", description);
+            }
+            if (client == null) {
+                throw new IllegalStateException("WebClient is null");
+            }
+            String response = client.makeRequest("/editOrgInfo", map);
+
+            if (response == null) {
+                throw new IllegalStateException("response was null");
+            }
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(response);
+            String status = (String) json.get("status");
+            if (status.equals("error")) {
+                return "error";
+            } else
+                return "success";
         } catch (IllegalStateException e) {
             throw new IllegalStateException();
         } catch (IllegalArgumentException e) {
