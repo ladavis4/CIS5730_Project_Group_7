@@ -79,7 +79,7 @@ public class UserInterface {
     }
 
     public void logout() {
-
+        main(new String[]{});
         while (true) {
             System.out.print("Enter the login : ");
             String login = in.nextLine().trim();
@@ -166,7 +166,9 @@ public class UserInterface {
                     String name = in.nextLine().trim();
                     System.out.println("Enter new description");
                     String description = in.nextLine().trim();
-                    String done = this.dataManager.updateOrgInfo(this.org.getId(), name, description, 2);
+//                    String done = this.dataManager.updateOrgInfo(this.org.getId(), name, description, 2);
+                    String[] args = {name, description};
+                    String done = this.dataManager.updateOrgInfo(this.org.getId(), args, 2);
                     if (done.equals("success")) {
                         System.out.println("Updated info successfully");
                     } else throw new Exception();
@@ -365,62 +367,115 @@ public class UserInterface {
     }
 
 
+//    public static Organization createOrganization(DataManager ds, Scanner scanner) {
+//
+//        while (true) {
+//            System.out.print("Enter the login : ");
+//            String login = scanner.nextLine().trim();
+//            String status = ds.checkIfLoginExists(login);
+//
+//            while (login.length() == 0 || status.equals("found")) {
+//                if (login.length() == 0) {
+//                    System.out.println("Error: Blank login provided! Provide another login");
+//                } else {
+//                    System.out.println("Error: Login provided already exists in database! Provide another login");
+//                }
+//                System.out.print("Enter the login: ");
+//                login = scanner.nextLine().trim();
+//            }
+//
+//            log = login;
+//
+//            System.out.print("Enter the password : ");
+//            String password = scanner.nextLine().trim();
+//
+//            while (password.length() == 0) {
+//                System.out.println("Error: Blank password provided! Provide another password");
+//                System.out.print("Enter the password: ");
+//                password = scanner.nextLine().trim();
+//            }
+//
+//            System.out.print("Enter the name : ");
+//            String name = scanner.nextLine().trim();
+//
+//            while (name.length() == 0) {
+//                System.out.println("Error: Blank password provided! Provide another password");
+//                System.out.print("Enter the password: ");
+//                password = scanner.nextLine().trim();
+//            }
+//
+//            System.out.print("Enter the description : ");
+//            String description = scanner.nextLine().trim();
+//
+//            while (name.length() == 0) {
+//                System.out.println("Error: Blank password provided! Provide another password");
+//                System.out.print("Enter the password: ");
+//                password = scanner.nextLine().trim();
+//            }
+//
+//            try {
+//                Organization org = ds.createOrg(login, password, name, description);
+//                //HashMap<Organization, String> map = new HashMap<>();
+//                //map.put(org, login);
+//                return org;
+//            } catch (Exception e2) {
+//                System.out.println("Creating Organization failed, please try again");
+//            }
+//        }
+//
+//    }
+
     public static Organization createOrganization(DataManager ds, Scanner scanner) {
 
         while (true) {
             System.out.print("Enter the login : ");
             String login = scanner.nextLine().trim();
+            if (login.length() == 0) {
+                System.out.println("Error: Blank login provided! Please try again.");
+                break;
+            }
             String status = ds.checkIfLoginExists(login);
-
-            while (login.length() == 0 || status.equals("found")) {
-                if (login.length() == 0) {
-                    System.out.println("Error: Blank login provided! Provide another login");
-                } else {
-                    System.out.println("Error: Login provided already exists in database! Provide another login");
+            if (status.equals("not found")) {
+                System.out.print("Enter the password : ");
+                String password = scanner.nextLine().trim();
+                while (password.length() == 0) {
+                    System.out.println("Error: Blank password provided! Provide another password");
+                    System.out.print("Enter the password: ");
+                    password = scanner.nextLine().trim();
                 }
-                System.out.print("Enter the login: ");
-                login = scanner.nextLine().trim();
-            }
 
-            log = login;
+                System.out.print("Enter the name of organization: ");
+                String name = scanner.nextLine().trim();
+                while (name.length() == 0) {
+                    System.out.println("Error: Empty name!");
+                    System.out.print("Enter the name: ");
+                    name = scanner.nextLine().trim();
+                }
 
-            System.out.print("Enter the password : ");
-            String password = scanner.nextLine().trim();
+                System.out.print("Enter the description : ");
+                String description = scanner.nextLine().trim();
 
-            while (password.length() == 0) {
-                System.out.println("Error: Blank password provided! Provide another password");
-                System.out.print("Enter the password: ");
-                password = scanner.nextLine().trim();
-            }
+                while (description.length() == 0) {
+                    System.out.println("Error: Description field empty!");
+                    System.out.print("Enter the description: ");
+                    description = scanner.nextLine().trim();
+                }
 
-            System.out.print("Enter the name : ");
-            String name = scanner.nextLine().trim();
-
-            while (name.length() == 0) {
-                System.out.println("Error: Blank password provided! Provide another password");
-                System.out.print("Enter the password: ");
-                password = scanner.nextLine().trim();
-            }
-
-            System.out.print("Enter the description : ");
-            String description = scanner.nextLine().trim();
-
-            while (name.length() == 0) {
-                System.out.println("Error: Blank password provided! Provide another password");
-                System.out.print("Enter the password: ");
-                password = scanner.nextLine().trim();
-            }
-
-            try {
-                Organization org = ds.createOrg(login, password, name, description);
-                //HashMap<Organization, String> map = new HashMap<>();
-                //map.put(org, login);
-                return org;
-            } catch (Exception e2) {
-                System.out.println("Creating Organization failed, please try again");
+                try {
+                    Organization org = ds.createOrg(login, password, name, description);
+                    return org;
+                } catch (Exception e2) {
+                    System.out.println("Creating Organization failed, please try again");
+                    return null;
+                }
+            } else if (status.equals("found")) {
+                System.out.println("An organization with this login already exists. Please try again with a different login");
+            } else {
+                System.out.println("An unexpected error occurred.");
+                break;
             }
         }
-
+        return null;
     }
 
 
@@ -478,15 +533,11 @@ public class UserInterface {
         } catch (Exception e) {
 
             DataManager ds = new DataManager(new WebClient("localhost", 3001));
-
             Organization org = null;
-            String login = null;
             while (true) {
-                System.out.println("Enter 0 to provide login and password to login.");
+                System.out.println("\n\nEnter 0 to provide login and password to login.");
                 System.out.println("Enter 1 to create a new organization");
-
                 Scanner scanner = new Scanner(System.in);
-
                 String str = scanner.nextLine().trim();
                 try {
                     if (Integer.parseInt(str) >= 0 && Integer.parseInt(str) <= 1) {
@@ -503,8 +554,6 @@ public class UserInterface {
                         		}
                         	}*/
                             org = createOrganization(ds, scanner);
-                            login = log;
-                            break;
                         } else {
                         	/*HashMap<Organization, String> map = login(ds, scanner);
                         	int count = 0;
@@ -517,19 +566,21 @@ public class UserInterface {
                         		}
                         	}*/
                             org = login(ds, scanner);
-                            login = log;
-                            break;
                         }
+                        if (org == null) {
+                            throw new NullPointerException();
+                        }
+                        break;
                     } else {
                         System.out.println("Error: Incorrect number provided. Please enter 0 or 1 ");
                     }
+                } catch (NullPointerException npe) {
+                    System.out.println("Please try again");
                 } catch (Exception e1) {
                     System.out.println("Error: Incorrect number provided. Please enter 0 or 1");
                 }
-
-
             }
-            UserInterface ui = new UserInterface(ds, org, login);
+            UserInterface ui = new UserInterface(ds, org);
             ui.start();
 
         }
