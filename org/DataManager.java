@@ -451,4 +451,52 @@ public class DataManager {
         }
     }
 
+    public String updateOrgInfo(String id, String[] args, int which) {
+        try {
+            if (id == null || args == null) {
+                throw new IllegalArgumentException("Null arguments");
+            }
+            if (which < 0 || which > 2) {
+                throw new IllegalArgumentException("Problem with which argument");
+            }
+            if ((which == 0 || which == 1) && args[0] == null)
+                throw new IllegalArgumentException("Null string argument given.");
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", id);
+            if (which == 0) {
+                map.put("name", args[0]);
+            } else if (which == 1) {
+                map.put("description", args[0]);
+            } else {
+                if (args[0] == null || args[1] == null)
+                    throw new IllegalArgumentException("Null string argument given.");
+                map.put("name", args[0]);
+                map.put("description", args[1]);
+            }
+            if (client == null) {
+                throw new IllegalStateException("WebClient is null");
+            }
+            String response = client.makeRequest("/updateOrgInfo", map);
+
+            if (response == null) {
+                throw new IllegalStateException("response was null");
+            }
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(response);
+            String status = (String) json.get("status");
+            if (status.equals("error")) {
+                return "error";
+            } else
+                return "success";
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            throw new IllegalStateException();
+        } catch (Exception e) {
+            return "error";
+        }
+    }
+
 }
