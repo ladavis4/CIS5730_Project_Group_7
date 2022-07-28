@@ -161,14 +161,41 @@ public class UserInterface {
                 } else if (checkPassword.equals("false")) {
                     System.out.println("Input current password is incorrect. Please try again.");
                 } else {
-                    System.out.println("Press enter to abort");
-                    System.out.println("Enter name");
-                    String name = in.nextLine().trim();
-                    System.out.println("Enter new description");
-                    String description = in.nextLine().trim();
-//                    String done = this.dataManager.updateOrgInfo(this.org.getId(), name, description, 2);
-                    String[] args = {name, description};
-                    String done = this.dataManager.updateOrgInfo(this.org.getId(), args, 2);
+                    String name = null;
+                    String description = null;
+
+                    System.out.println("Would you like to change the name of the organization?");
+                    System.out.println("Current name: " + this.org.getName());
+                    System.out.println("Enter Y/y for yes, any other key for no");
+                    String response = in.nextLine().trim();
+                    if (response.toUpperCase().equals("Y")) {
+                        System.out.println("Enter new name");
+                        name = in.nextLine().trim();
+                    }else{
+                        System.out.println("Name change ignored");
+                    }
+
+                    System.out.println("Would you like to change the description of the organization?");
+                    System.out.println("Description: " + this.org.getDescription());
+                    System.out.println("Enter Y/y for yes, any other key for no");
+                    response = in.nextLine().trim();
+                    if (response.toUpperCase().equals("Y")) {
+                        System.out.println("Enter new description");
+                        description = in.nextLine().trim();
+                    }else{
+                        System.out.println("Description change ignored");
+                    }
+
+                    String done = "failure";
+                    if(name == null && description == null){
+                        System.out.println("No changes applied");
+                    }else if(name != null && description == null){
+                        done = this.dataManager.updateOrgInfo(this.org.getId(), name, "", 0);
+                    }else if(name ==null && description != null){
+                        done = this.dataManager.updateOrgInfo(this.org.getId(), "", description, 1);
+                    } else{
+                        done = this.dataManager.updateOrgInfo(this.org.getId(), name, description, 2);
+                    }
                     if (done.equals("success")) {
                         System.out.println("Updated info successfully");
                     } else throw new Exception();
