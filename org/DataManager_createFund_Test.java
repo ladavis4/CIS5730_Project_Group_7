@@ -2,8 +2,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class DataManager_createFund_Test {
 
@@ -86,5 +85,18 @@ public class DataManager_createFund_Test {
 
     }
 
+    @Test
+    public void testGenericExceptionThrown() {
 
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                throw new RuntimeException();
+            }
+
+        });
+        Fund f = dm.createFund("12345", "new fund", "this is the new fund", 10000);
+        assertNull(f);
+    }
 }

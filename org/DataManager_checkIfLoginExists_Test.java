@@ -60,12 +60,7 @@ public class DataManager_checkIfLoginExists_Test {
 
     @Test(expected = IllegalArgumentException.class)
     public void testWhenOrgIdIsNull() {
-        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "Something";
-            }
-        });
+        DataManager dm = new DataManager(new WebClient("localhost", 3001));
         dm.checkIfLoginExists(null);
     }
 

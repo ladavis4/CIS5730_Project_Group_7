@@ -43,12 +43,7 @@ public class DataManager_checkIfPasswordForOrgIsCorrect_Test {
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullArgumentsGivenToDataManagerMethod() {
-        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"status\":\"error\"}";
-            }
-        });
+        DataManager dm = new DataManager(new WebClient("localhost", 3001));
         dm.checkIfPasswordForOrgIsCorrect(null, null);
     }
 

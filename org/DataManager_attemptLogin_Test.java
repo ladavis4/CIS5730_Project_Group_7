@@ -1,10 +1,10 @@
 import org.junit.Test;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 //    This is a test class for the DataManager.attemptLogin method.
 public class DataManager_attemptLogin_Test {
@@ -64,5 +64,18 @@ public class DataManager_attemptLogin_Test {
 //        Organization org =
         dm.attemptLogin("Harsh", "pass");
 //        assertNull(org);
+    }
+
+    @Test
+    public void testGenericException() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                throw new RuntimeException();
+            }
+        });
+//        Organization org =
+        Organization org = dm.attemptLogin("Harsh", "pass");
+        assertNull(org);
     }
 }

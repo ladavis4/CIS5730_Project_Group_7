@@ -48,12 +48,7 @@ public class DataManager_deleteFund_Test {
 
     @Test(expected = IllegalArgumentException.class)
     public void testWhenFundIdIsNull() {
-        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "Something";
-            }
-        });
+        DataManager dm = new DataManager(new WebClient("localhost", 3001));
         dm.deleteFund(null);
     }
 
