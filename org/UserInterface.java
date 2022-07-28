@@ -162,7 +162,7 @@ public class UserInterface {
                     System.out.println("Input current password is incorrect. Please try again.");
                 } else {
                     System.out.println("Press enter to abort");
-                    System.out.println("Enter name");
+                    System.out.println("Enter new name");
                     String name = in.nextLine().trim();
                     System.out.println("Enter new description");
                     String description = in.nextLine().trim();
