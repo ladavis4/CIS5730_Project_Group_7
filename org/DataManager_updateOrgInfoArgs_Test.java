@@ -1,11 +1,10 @@
 import org.junit.Test;
 
-import java.text.ParseException;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class DataManager_updateOrgInfo_Test {
+public class DataManager_updateOrgInfoArgs_Test {
     @Test
     public void testSuccessfulUpdateNameAndDescription() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
@@ -14,7 +13,7 @@ public class DataManager_updateOrgInfo_Test {
                 return "{\"status\":\"success\"}";
             }
         });
-        String response = dm.updateOrgInfo("783t4238b07", "Penn", "Something", 2);
+        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
         assertEquals("success", response);
     }
 
@@ -26,7 +25,7 @@ public class DataManager_updateOrgInfo_Test {
                 return "{\"status\":\"success\"}";
             }
         });
-        String response = dm.updateOrgInfo("783t4238b07", "Penn", "", 0);
+        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn"}, 0);
         assertEquals("success", response);
     }
 
@@ -38,25 +37,38 @@ public class DataManager_updateOrgInfo_Test {
                 return "{\"status\":\"success\"}";
             }
         });
-        String response = dm.updateOrgInfo("783t4238b07", "Penn", "new description", 1);
+        String response = dm.updateOrgInfo("783t4238b07", new String[]{"new description"}, 1);
         assertEquals("success", response);
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void testNullArgument() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001));
-        String response = dm.updateOrgInfo(null, "Penn", "Something", 2);
+        String response = dm.updateOrgInfo(null, new String[]{"Penn", "Something"}, 2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullStringArgument() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001));
+        String response = dm.updateOrgInfo("12321dfaslfs", new String[]{null, "Something"}, 1);
+    }
+
+    @Test
+    public void testNullStringArgumentDescriptionAndName() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001));
+        String response = dm.updateOrgInfo("12321dfaslfs", new String[]{null, "Something"}, 2);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalWhichValue() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001));
-        String response = dm.updateOrgInfo("asdkdfdkj3939", "Penn", "Something", 10);
+        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 20);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testNullClient() {
         DataManager dm = new DataManager(null);
-        String response = dm.updateOrgInfo("asdkdfdkj3939", "Penn", "Something", 2);
+        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -67,7 +79,7 @@ public class DataManager_updateOrgInfo_Test {
                 return null;
             }
         });
-        String response = dm.updateOrgInfo("asdkdfdkj3939", "Penn", "Something", 2);
+        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
     }
 
     @Test
@@ -78,7 +90,7 @@ public class DataManager_updateOrgInfo_Test {
                 return "{\"status\":\"error\"}";
             }
         });
-        String response = dm.updateOrgInfo("asdkdfdkj3939", "Penn", "Something", 2);
+        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
         assertEquals("error", response);
     }
 
@@ -90,7 +102,7 @@ public class DataManager_updateOrgInfo_Test {
                 return "not_a_json";
             }
         });
-        String response = dm.updateOrgInfo("asdkdfdkj3939", "Penn", "Something", 2);
+        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
     }
 
     @Test
@@ -101,7 +113,7 @@ public class DataManager_updateOrgInfo_Test {
                 throw new RuntimeException();
             }
         });
-        String response = dm.updateOrgInfo("asdkdfdkj3939", "Penn", "Something", 2);
+        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
         assertEquals("error", response);
     }
 }
