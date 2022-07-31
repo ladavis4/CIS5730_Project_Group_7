@@ -163,7 +163,6 @@ public class UserInterface {
                 } else {
                     String name = null;
                     String description = null;
-
                     System.out.println("Would you like to change the name of the organization?");
                     System.out.println("Current name: " + this.org.getName());
                     System.out.println("Enter Y/y for yes, any other key for no");
@@ -171,8 +170,12 @@ public class UserInterface {
                     if (response.toUpperCase().equals("Y")) {
                         System.out.println("Enter new name");
                         name = in.nextLine().trim();
-                    }else{
-                        System.out.println("Name change ignored");
+                        while (name.length() == 0) {
+                            System.out.println("Name cannot be empty\nEnter new name: ");
+                            name = in.nextLine().trim();
+                        }
+                    } else {
+                        System.out.println("Name will not be changed");
                     }
 
                     System.out.println("Would you like to change the description of the organization?");
@@ -182,19 +185,23 @@ public class UserInterface {
                     if (response.toUpperCase().equals("Y")) {
                         System.out.println("Enter new description");
                         description = in.nextLine().trim();
-                    }else{
-                        System.out.println("Description change ignored");
+                        while (description.length() == 0) {
+                            System.out.println("Description cannot be empty\nEnter new description: ");
+                            description = in.nextLine().trim();
+                        }
+                    } else {
+                        System.out.println("Description will not be changed");
                     }
 
                     String done = "failure";
-                    if(name == null && description == null){
+                    if (name == null && description == null) {
                         System.out.println("No changes applied");
-                    }else if(name != null && description == null){
-                        done = this.dataManager.updateOrgInfo(this.org.getId(), name, "", 0);
-                    }else if(name ==null && description != null){
-                        done = this.dataManager.updateOrgInfo(this.org.getId(), "", description, 1);
-                    } else{
-                        done = this.dataManager.updateOrgInfo(this.org.getId(), name, description, 2);
+                    } else if (name != null && description == null) {
+                        done = this.dataManager.updateOrgInfo(this.org.getId(), new String[]{name}, 0);
+                    } else if (name == null && description != null) {
+                        done = this.dataManager.updateOrgInfo(this.org.getId(), new String[]{description}, 1);
+                    } else {
+                        done = this.dataManager.updateOrgInfo(this.org.getId(), new String[]{name, description}, 2);
                     }
                     if (done.equals("success")) {
                         System.out.println("Updated info successfully");
