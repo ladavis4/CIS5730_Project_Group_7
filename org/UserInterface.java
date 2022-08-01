@@ -10,18 +10,10 @@ public class UserInterface {
     private Organization org;
     private Scanner in = new Scanner(System.in);
     private Map<Integer, String> results = new HashMap<>();
-    private String currentLogin;
-    private static String log;
 
     public UserInterface(DataManager dataManager, Organization org) {
         this.dataManager = dataManager;
         this.org = org;
-    }
-
-    public UserInterface(DataManager dataManager, Organization org, String currentLogin) {
-        this.dataManager = dataManager;
-        this.org = org;
-        this.currentLogin = currentLogin;
     }
 
     /*
@@ -111,16 +103,14 @@ public class UserInterface {
 
     public void changePassword() {
         try {
-//        System.out.println("Enter 1 to abort password change");
             System.out.println("Enter your current password");
             String currentPassword = in.nextLine().trim();
-//        if (currentPassword.equalsIgnoreCase("n")) {
-//
-//        }
+
             if (currentPassword.length() == 0 || currentPassword == null) {
                 System.out.println("Wrong password. Please try changing password again.");
             } else {
                 String checkPassword = this.dataManager.checkIfPasswordForOrgIsCorrect(this.org.getId(), currentPassword);
+
                 if (checkPassword.equals("error")) {
                     System.out.println("There was an error in verifying password. Please try again.");
                 } else if (checkPassword.equals("false")) {
@@ -129,17 +119,19 @@ public class UserInterface {
                     System.out.println("Press enter to abort");
                     System.out.println("Enter new password");
                     String new1 = in.nextLine().trim();
+
                     if (new1.length() != 0) {
                         System.out.println("Enter new password again");
                         String new2 = in.nextLine().trim();
+
                         if (new1.equals(new2)) {
-//                            String done = this.dataManager.updatePassword(currentLogin, currentPassword, new2);
                             String done = this.dataManager.updatePassword(this.org.getId(), new2);
                             if (done.equals("success")) {
                                 System.out.println("Password changed successfully");
                             } else throw new Exception();
                         } else
                             System.out.println("New passwords don't match.\nPassword was not changed.\nPlease try again.");
+
                     } else System.out.println("Password not changed.");
                 }
             }
@@ -147,6 +139,7 @@ public class UserInterface {
             System.out.println("There was an unexpected error in changing password. Please try again.");
         }
     }
+
 
     public void editAccountInfo() {
         try {
@@ -193,19 +186,26 @@ public class UserInterface {
                         System.out.println("Description will not be changed");
                     }
 
-                    String done = "failure";
+                    String done = "";
                     if (name == null && description == null) {
                         System.out.println("No changes applied");
                     } else if (name != null && description == null) {
                         done = this.dataManager.updateOrgInfo(this.org.getId(), new String[]{name}, 0);
+                        if (done.equals("error")) throw new Exception();
+                        this.org.setName(name);
                     } else if (name == null && description != null) {
                         done = this.dataManager.updateOrgInfo(this.org.getId(), new String[]{description}, 1);
+                        if (done.equals("error")) throw new Exception();
+                        this.org.setDescription(description);
                     } else {
                         done = this.dataManager.updateOrgInfo(this.org.getId(), new String[]{name, description}, 2);
+                        if (done.equals("error")) throw new Exception();
+                        this.org.setName(name);
+                        this.org.setDescription(description);
                     }
                     if (done.equals("success")) {
                         System.out.println("Updated info successfully");
-                    } else throw new Exception();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -251,7 +251,8 @@ public class UserInterface {
                 System.out.print("Enter the fund target:");
                 in.next();
             }
-            target = Long.parseLong(in.nextLine().trim());
+            target = in.nextInt();//Long.parseLong(in.nextLine().trim());
+            in.nextLine();
         } while (target <= 0);
         try {
             Fund fund = dataManager.createFund(org.getId(), name, description, target);
@@ -524,8 +525,6 @@ public class UserInterface {
                 login = scanner.nextLine().trim();
             }
 
-            log = login;
-
             System.out.print("Enter the password : ");
             String password = scanner.nextLine().trim();
 
@@ -536,8 +535,6 @@ public class UserInterface {
             }
             try {
                 Organization org = ds.attemptLogin(login, password);
-                //HashMap<Organization, String> map = new HashMap<>();
-                //map.put(org, login);
                 return org;
             } catch (Exception e2) {
                 System.out.println("Login failed, please try again");
@@ -559,7 +556,7 @@ public class UserInterface {
                 System.out.println("Login failed.");
             } else {
 
-                UserInterface ui = new UserInterface(ds, org, login);
+                UserInterface ui = new UserInterface(ds, org);
 
                 ui.start();
 
@@ -577,28 +574,8 @@ public class UserInterface {
                     if (Integer.parseInt(str) >= 0 && Integer.parseInt(str) <= 1) {
                         int option = Integer.parseInt(str);
                         if (option == 1) {
-                            /*HashMap<Organization, String> map = createOrganization(ds, scanner);
-                        	int count = 0;
-                        	for(Organization key: map.keySet()) {
-                        		if(count == 0) {
-                        			org = key;
-                        			login = map.get(key);
-                        			count++;
-                        			break;
-                        		}
-                        	}*/
                             org = createOrganization(ds, scanner);
                         } else {
-                        	/*HashMap<Organization, String> map = login(ds, scanner);
-                        	int count = 0;
-                        	for(Organization key: map.keySet()) {
-                        		if(count == 0) {
-                        			org = key;
-                        			login = map.get(key);
-                        			count++;
-                        			break;
-                        		}
-                        	}*/
                             org = login(ds, scanner);
                         }
                         if (org == null) {
