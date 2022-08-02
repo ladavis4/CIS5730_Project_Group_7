@@ -1,0 +1,36 @@
+Harsh Sareen, Pranay Kapoor, Lenny Davis
+Project Phase 3 Group 7 Write Up
+1. Optional Tasks Attempted:
+   1. Task 3.1 Organization App new user registration
+   2. Task 3.2 Organization App change password
+   3. Task 3.3 Organization App edit account information
+
+
+2. Changes Made For Tasks
+    1. Task 3.1:
+    The primary changes were made to the UserInterface.java class where in case that while running the app login arguments were not provided then the user was given an option of logging in or creating a new organization by providing an input of 0 or 1. Upon selecting, 0 the user was asked to provide a login and password which were then sent through the DataManager to attemptLogin. If attemptLogin succeeded, an organization was returned for the login and password provided and a new UI was created and then started as would be in the case that the login credentials were initially provided. In comparison, on selecting 1, the user would be prompted to provide a login, password, organization name, and description. If the login provided was blank or in the database, an error message would be displayed and in the latter case the user would have the option to again select whether they would like to provide login credentials or create a new organization while in the former case, the user would be re-prompted for login credentials. Similarly, if the organization name, password, description were blank, the user would be re-prompted for providing the inputs. Once the inputs were provided and the login were unique, a new Organization would be created from createOrg method in the DataManager class and once the organization id was returned, we would again create a new UI and start the app as in the case if login credentials were provided. To ensure that we could test whether the login provided was unique and to create a new organization, two new methods were also added to the DataManager class to implement this functionality. Those methods are the  checkIfLoginExists() and the createOrg() methods in the DataManager class that would check if login credentials were unique and create an organization once all valid fields were provided. These methods also resulted in the api.js file being modified so that the Organization app could communicate with the DB through the API. The API now supports “/checkOrgByLogin” which checks if an organization with the given login id exists and uses “/createOrg” once valid inputs have been given. Finally, the new methods in DataManager employed defensive programming and were tested for complete statement coverage.
+
+
+    2. Task 3.2:
+    For this task, changes were made to UserInterface, DataManager and api.js. The UserInterface was updated to provide an option for changing password for a logged in user. This functionality is given in the method changePassword() in UserInterface.java. The user can select the ‘C/c’ option from the UI to do this once logged in. The DataManger has 2 new methods for this task. So does the API. They are:
+    1. checkIfPasswordForOrgIsCorrect() which takes 2 arguments, the id and current password and uses the new API call “/checkIfPasswordCorrect” to check if the entered current password is correct or not. If no error occurs, the returned status indicates if it is correct. Any sort of error results in an appropriate error message.
+    2. updatePassword() which takes 2 arguments, the id and new password and uses the API call “/updatePassword” to update the password to the new password given in the request url for the organization with the given id. If no error occurs, the returned status indicates if the password was changed successfully or not. Any sort of error results in an appropriate error message.
+
+
+    3. Task 3.3:
+    Similar to task 3.2, changes were made to UserInterface, DataManager and api.js. The UserInterface was updated to provide an option for changing name and description of the organization for a logged in user. This functionality is given in the method editAccountInfo(). The user can select the ‘E/e’ option from the UI to do this once logged in. This task also uses the checkIfPasswordForOrgIsCorrect() from task 3.2 to verify the password, and only then allows the user to change any account information. The user gets to choose whether to change name, description or both using the UI. To do this, a new method was used in DataManager named updateOrgInfo() which takes the organization’s id, name, description, and depending on the case updates the information using the API call “/updateOrgInfo”. If no error occurs, the returned status indicates if the information was changed successfully or not. Any sort of error, results in an appropriate error message. In addition to these additional methods, the Organization class was also updated and now includes 2 new methods setName() and setDescription() which update the name and/or description, depending on the case, and are used for displaying the latest version of these fields every time the user chooses to change the account information.
+
+
+Apart from these, new test classes were created for each new method in the DataManager class for all tasks and tests were written to achieve 100% statement coverage.
+
+
+3. Known Bugs or Issues : None
+
+
+4. New Start-up Instructions :
+   1. In addition to the previous way to start the app, it can now be started without providing login and password as command line arguments.
+
+5. Team Member Contributions
+   1. Pranay - Task 3.1 -  Worked on task 3.1 functionality and API.
+   2. Harsh - Task 3.1, 3.2, 3.3 -  Worked on API for all tasks. Implemented entire functionality for 3.2. Worked on implementation of functionality and debugging of 3.1 and 3.3. Wrote tests for all tasks.
+   3. Lenny - Task 3.3 - Worked on task 3.3 functionality and testing.
