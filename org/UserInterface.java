@@ -71,7 +71,7 @@ public class UserInterface {
     }
 
     public void logout() {
-        main(new String[]{});
+//        main(new String[]{});
         while (true) {
             System.out.print("Enter the login : ");
             String login = in.nextLine().trim();

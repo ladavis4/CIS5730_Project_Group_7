@@ -242,6 +242,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * This method deletes a fund in the database using the /deleteFund endpoint in the API
+     *
+     * @return status indicating success or error.
+     */
     public String deleteFund(String fundID) {
         try {
             if (fundID == null) {
@@ -275,6 +280,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * This method checks if a login exists in the database using the /checkOrgByLogin endpoint in the API
+     *
+     * @return appropriate status or error.
+     */
     public String checkIfLoginExists(String login) {
         try {
             if (login == null) {
@@ -307,6 +317,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * This method checks if password for organization with given id exists in the database using the /checkIfPasswordCorrect endpoint in the API
+     *
+     * @return appropriate status or error.
+     */
     public String checkIfPasswordForOrgIsCorrect(String id, String password) {
         try {
             if (id == null || password == null) {
@@ -340,40 +355,11 @@ public class DataManager {
         }
     }
 
-//    public String updatePassword(String login, String password, String newPassword) {
-//        try {
-//            if (login == null || password == null || newPassword == null) {
-//                throw new IllegalArgumentException("Null arguments");
-//            }
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("login", login);
-//            map.put("password", password);
-//            map.put("passwordNew", newPassword);
-//            if (client == null) {
-//                throw new IllegalStateException("WebClient is null");
-//            }
-//            String response = client.makeRequest("/updatePassword", map);
-//            if (response == null) {
-//                throw new IllegalStateException("response was null");
-//            }
-//            JSONParser parser = new JSONParser();
-//            JSONObject json = (JSONObject) parser.parse(response);
-//            String status = (String) json.get("status");
-//            if (!status.equals("error")) {
-//                return status;
-//            } else
-//                return "error";
-//        } catch (IllegalStateException e) {
-//            throw new IllegalStateException();
-//        } catch (IllegalArgumentException e) {
-//            throw new IllegalArgumentException();
-//        } catch (ParseException e) {
-//            throw new IllegalStateException();
-//        } catch (Exception e) {
-//            return "error";
-//        }
-//    }
-
+    /**
+     * This method updates the password for organization with given id in the database using the /updatePassword endpoint in the API
+     *
+     * @return appropriate status or error.
+     */
     public String updatePassword(String id, String newPassword) {
         try {
             if (id == null || newPassword == null) {
@@ -407,6 +393,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * This method updates the information for organization with given id in the database using the /updateOrgInfo endpoint in the API
+     *
+     * @return appropriate status or error.
+     */
     public String updateOrgInfo(String id, String name, String description, int which) {
         try {
             if (id == null || name == null || description == null) {
@@ -451,6 +442,11 @@ public class DataManager {
         }
     }
 
+    /**
+     * This method updates the information for organization with given id in the database using the /updateOrgInfo endpoint in the API
+     *
+     * @return appropriate status or error.
+     */
     public String updateOrgInfo(String id, String[] args, int which) {
         try {
             if (id == null || args == null) {

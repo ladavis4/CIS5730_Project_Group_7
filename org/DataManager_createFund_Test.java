@@ -99,4 +99,43 @@ public class DataManager_createFund_Test {
         Fund f = dm.createFund("12345", "new fund", "this is the new fund", 10000);
         assertNull(f);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testOrgIdIsNull() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"login\"}";
+            }
+        });
+        dm.createFund(null, "new fund", "this is the new fund", 10000);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testWebClientIsNull() {
+        DataManager dm = new DataManager(null);
+        dm.createFund("12345", "new fund", "this is the new fund", 10000);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testResponseFromWebClientIsNull() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return null;
+            }
+        });
+        dm.createFund("12345", "new fund", "this is the new fund", 10000);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testResponseFromWebClientIsMalformed() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "not_json";
+            }
+        });
+        dm.createFund("12345", "new fund", "this is the new fund", 10000);
+    }
 }

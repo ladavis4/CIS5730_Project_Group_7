@@ -31,7 +31,7 @@ public class WebClient {
 
             }
 
-            //System.out.println("Web Client request: " + request);
+//            System.out.println("Web Client request: " + request);
 
             URL url = new URL(request);
             url.openConnection();
@@ -42,7 +42,7 @@ public class WebClient {
                 response += line;
             }
 
-            //System.out.println("Web Client response: " + response);
+//            System.out.println("Web Client response: " + response);
 
             in.close();
 

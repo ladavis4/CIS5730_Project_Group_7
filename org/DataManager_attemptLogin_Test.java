@@ -1,6 +1,5 @@
 import org.junit.Test;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Map;
 
@@ -61,21 +60,47 @@ public class DataManager_attemptLogin_Test {
                 return "no_speak_json";
             }
         });
-//        Organization org =
         dm.attemptLogin("Harsh", "pass");
-//        assertNull(org);
     }
 
     @Test
-    public void testGenericException() {
+    public void testExceptionThrownByWebClient() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
                 throw new RuntimeException();
             }
         });
-//        Organization org =
         Organization org = dm.attemptLogin("Harsh", "pass");
         assertNull(org);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLoginIsNull() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"login\"}";
+            }
+        });
+        dm.attemptLogin(null, "pass");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testWebClientIsNull() {
+        DataManager dm = new DataManager(null);
+        dm.attemptLogin("hasareen", "pass");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testResponseFromWebClientIsNull() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return null;
+            }
+        });
+        dm.attemptLogin("hasareen", "pass");
+    }
+
 }

@@ -53,22 +53,22 @@ public class DataManager_updateOrgInfoArgs_Test {
         String response = dm.updateOrgInfo("12321dfaslfs", new String[]{null, "Something"}, 1);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testNullStringArgumentDescriptionAndName() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001));
-        String response = dm.updateOrgInfo("12321dfaslfs", new String[]{null, "Something"}, 2);
+        dm.updateOrgInfo("12321dfaslfs", new String[]{null, "Something"}, 2);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalWhichValue() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001));
-        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 20);
+        dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 20);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testNullClient() {
         DataManager dm = new DataManager(null);
-        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
+        dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -79,7 +79,7 @@ public class DataManager_updateOrgInfoArgs_Test {
                 return null;
             }
         });
-        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
+        dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
     }
 
     @Test
@@ -98,18 +98,18 @@ public class DataManager_updateOrgInfoArgs_Test {
     public void testParseException() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams){
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
                 return "not_a_json";
             }
         });
-        String response = dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
+        dm.updateOrgInfo("783t4238b07", new String[]{"Penn", "Something"}, 2);
     }
 
     @Test
     public void testGenericException() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) throws RuntimeException{
+            public String makeRequest(String resource, Map<String, Object> queryParams) throws RuntimeException {
                 throw new RuntimeException();
             }
         });

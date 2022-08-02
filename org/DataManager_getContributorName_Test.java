@@ -59,6 +59,7 @@ public class DataManager_getContributorName_Test {
         dm.getContributorName("hasareen");
 //        assertNull(name);
     }
+
     @Test
     public void testGenericException() {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
@@ -69,5 +70,33 @@ public class DataManager_getContributorName_Test {
         });
         String name = dm.getContributorName("hasareen");
         assertNull(name);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testIdIsNull() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"login\"}";
+            }
+        });
+        dm.getContributorName(null);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testWebClientIsNull() {
+        DataManager dm = new DataManager(null);
+        dm.getContributorName("tyf6t86v6b");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testResponseFromWebClientIsNull() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return null;
+            }
+        });
+        dm.getContributorName("tyf6t86v6b");
     }
 }
