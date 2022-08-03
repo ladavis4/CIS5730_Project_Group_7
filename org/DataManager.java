@@ -393,59 +393,12 @@ public class DataManager {
         }
     }
 
-    /**
-     * This method updates the information for organization with given id in the database using the /updateOrgInfo endpoint in the API
-     *
-     * @return appropriate status or error.
-     */
-    public String updateOrgInfo(String id, String name, String description, int which) {
-        try {
-            if (id == null || name == null || description == null) {
-                throw new IllegalArgumentException("Null arguments");
-            }
-            if (which < 0 || which > 2) {
-                throw new IllegalArgumentException("Problem with which argument");
-            }
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", id);
-            if (which == 0) {
-                map.put("name", name);
-            } else if (which == 1) {
-                map.put("description", description);
-            } else {
-                map.put("name", name);
-                map.put("description", description);
-            }
-            if (client == null) {
-                throw new IllegalStateException("WebClient is null");
-            }
-            String response = client.makeRequest("/updateOrgInfo", map);
-
-            if (response == null) {
-                throw new IllegalStateException("response was null");
-            }
-            JSONParser parser = new JSONParser();
-            JSONObject json = (JSONObject) parser.parse(response);
-            String status = (String) json.get("status");
-            if (status.equals("error")) {
-                return "error";
-            } else
-                return "success";
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException();
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException();
-        } catch (ParseException e) {
-            throw new IllegalStateException();
-        } catch (Exception e) {
-            return "error";
-        }
-    }
 
     /**
      * This method updates the information for organization with given id in the database using the /updateOrgInfo endpoint in the API
      *
      * @return appropriate status or error.
+     * The String[] args contains the argument(s) to be updated. which indicates the argument case. 0 = name, 1 = description, 2 = both
      */
     public String updateOrgInfo(String id, String[] args, int which) {
         try {

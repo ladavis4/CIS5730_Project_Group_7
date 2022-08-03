@@ -187,17 +187,17 @@ public class UserInterface {
                     }
 
                     String done = "";
-                    if (name == null && description == null) {
+                    if (name == null && description == null) { // No updates
                         System.out.println("No changes applied");
-                    } else if (name != null && description == null) {
+                    } else if (name != null && description == null) { //Only name will be updated
                         done = this.dataManager.updateOrgInfo(this.org.getId(), new String[]{name}, 0);
                         if (done.equals("error")) throw new Exception();
                         this.org.setName(name);
-                    } else if (name == null && description != null) {
+                    } else if (name == null && description != null) { // Only description will be updated
                         done = this.dataManager.updateOrgInfo(this.org.getId(), new String[]{description}, 1);
                         if (done.equals("error")) throw new Exception();
                         this.org.setDescription(description);
-                    } else {
+                    } else { // Both will be changed to newer values
                         done = this.dataManager.updateOrgInfo(this.org.getId(), new String[]{name, description}, 2);
                         if (done.equals("error")) throw new Exception();
                         this.org.setName(name);
@@ -402,64 +402,6 @@ public class UserInterface {
     }
 
 
-//    public static Organization createOrganization(DataManager ds, Scanner scanner) {
-//
-//        while (true) {
-//            System.out.print("Enter the login : ");
-//            String login = scanner.nextLine().trim();
-//            String status = ds.checkIfLoginExists(login);
-//
-//            while (login.length() == 0 || status.equals("found")) {
-//                if (login.length() == 0) {
-//                    System.out.println("Error: Blank login provided! Provide another login");
-//                } else {
-//                    System.out.println("Error: Login provided already exists in database! Provide another login");
-//                }
-//                System.out.print("Enter the login: ");
-//                login = scanner.nextLine().trim();
-//            }
-//
-//            log = login;
-//
-//            System.out.print("Enter the password : ");
-//            String password = scanner.nextLine().trim();
-//
-//            while (password.length() == 0) {
-//                System.out.println("Error: Blank password provided! Provide another password");
-//                System.out.print("Enter the password: ");
-//                password = scanner.nextLine().trim();
-//            }
-//
-//            System.out.print("Enter the name : ");
-//            String name = scanner.nextLine().trim();
-//
-//            while (name.length() == 0) {
-//                System.out.println("Error: Blank password provided! Provide another password");
-//                System.out.print("Enter the password: ");
-//                password = scanner.nextLine().trim();
-//            }
-//
-//            System.out.print("Enter the description : ");
-//            String description = scanner.nextLine().trim();
-//
-//            while (name.length() == 0) {
-//                System.out.println("Error: Blank password provided! Provide another password");
-//                System.out.print("Enter the password: ");
-//                password = scanner.nextLine().trim();
-//            }
-//
-//            try {
-//                Organization org = ds.createOrg(login, password, name, description);
-//                //HashMap<Organization, String> map = new HashMap<>();
-//                //map.put(org, login);
-//                return org;
-//            } catch (Exception e2) {
-//                System.out.println("Creating Organization failed, please try again");
-//            }
-//        }
-//
-//    }
-
     public static Organization createOrganization(DataManager ds, Scanner scanner) {
 
         while (true) {
@@ -587,8 +529,10 @@ public class UserInterface {
                     }
                 } catch (NullPointerException npe) {
                     System.out.println("Please try again");
+                } catch (IllegalStateException ise) {
+                    System.out.println("An unexpected error occurred. Please try again.");
                 } catch (Exception e1) {
-                    System.out.println("Error: Incorrect number provided. Please enter 0 or 1");
+                    System.out.println("Error: Please enter 0 or 1");
                 }
             }
             UserInterface ui = new UserInterface(ds, org);
